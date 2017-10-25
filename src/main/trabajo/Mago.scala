@@ -2,11 +2,11 @@ package main.trabajo
 
 import stats.Inteligencia
 
-class Mago {
+class Mago extends Trabajo{
   var statPrincipal = new Inteligencia
   
-  val hp = 0
-  val fuerza = -20
-  val velocidad = 0
-  val inteligencia = 20
+  var hp = 0
+  var fuerza = -20
+  var velocidad = 0
+  var inteligencia = 20
 }

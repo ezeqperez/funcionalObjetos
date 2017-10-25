@@ -9,6 +9,9 @@ import main.inventario.items.Item
 import main.inventario.items.Casco
 import main.trabajo.Trabajo
 import main.trabajo.Guerrero
+import main.trabajo.Mago
+import stats.Inteligencia
+import stats.Fuerza
 
 class TestHeroe {
   var heroe:Heroe = null
@@ -42,6 +45,18 @@ class TestHeroe {
     inventario.casco = casco        
     assertEquals(casco, heroe.inventario.casco)
     assertEquals(null, heroe.inventario.cuerpo)
+    
+  }
+  
+  @Test
+ //TODO: Hay que armar el test como corresponde
+  def seLeAsignaTrabajoAUnHeroe(){
+    heroe.trabajo = trabajo
+   // assertEquals(new Fuerza, heroe.trabajo.statPrincipal)
+    
+    heroe.trabajo = new Mago
+   // assertEquals(new Inteligencia, heroe.trabajo.statPrincipal)
+    
     
   }
   

@@ -1,14 +1,13 @@
 package main.trabajo
 
-import stats.Stat
 import stats.Fuerza
 
 class Guerrero extends Trabajo{
   var statPrincipal = new Fuerza
   
-  val hp = 10
-  val fuerza = 15
-  val velocidad = 0
-  val inteligencia = -10
+  var hp = 10
+  var fuerza = 15
+  var velocidad = 0
+  var inteligencia = -10
  
 }
