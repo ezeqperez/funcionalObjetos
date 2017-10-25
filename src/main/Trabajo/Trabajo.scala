@@ -1,5 +1,5 @@
-package main.Trabajo
+package main.trabajo
 
-abstract class Trabajo {
+trait Trabajo {
   
 }
