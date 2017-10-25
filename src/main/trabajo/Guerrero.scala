@@ -1,12 +1,14 @@
 package main.trabajo
 
+import stats.Stat
+import stats.Fuerza
+
 class Guerrero extends Trabajo{
-  //No va a ser un string, pero va a haber un tipo "Stat"? se justifica?
-  val statPrincipal:String = "Fuerza"
+  var statPrincipal = new Fuerza
   
-  val hp:Int = 10
-  val fuerza:Int = 15
-  val velocidad:Int = 0
-  val inteligencia:Int = -10
+  val hp = 10
+  val fuerza = 15
+  val velocidad = 0
+  val inteligencia = -10
  
 }
