@@ -39,6 +39,11 @@ class TestHeroe {
   }
   
   @Test
+  def lasEstadisticasDelHeroeNoPuedenSerCeroONegativas(){
+   // var heroeValido:Heroe = new Heroe(0,3,4,5)
+  }
+  
+  @Test
   def heroeConInventario(){
     var casco = new Casco
     heroe.inventario = inventario
