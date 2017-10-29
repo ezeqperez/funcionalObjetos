@@ -3,7 +3,7 @@ package main.trabajo
 import main.Heroe
 
 trait Trabajo{
-  val statPrincipal : String //volar estos string feos..
+  val statPrincipal : String //TODO volar estos string feos..
 }
 
 object Guerrero extends Trabajo{
