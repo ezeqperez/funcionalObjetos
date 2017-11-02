@@ -2,7 +2,7 @@ package main
 
 import main.trabajo.Trabajo
 
-class Heroe(var hpBase: Int, var fuerzaBase: Int, var velocidadBase: Int, var inteligenciaBase: Int, var trabajo: Option[Trabajo],
+class Heroe(val hpBase: Int, val fuerzaBase: Int, val velocidadBase: Int, val inteligenciaBase: Int, val trabajo: Option[Trabajo],
                  var inventario: List[Item]) {
   require(hpBase > 0, "El hp debe ser mayor a cero")
   require(fuerzaBase > 0, "La fuerza debe ser mayor a cero")
