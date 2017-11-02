@@ -35,8 +35,21 @@ class TestHeroe {
     }
     */
   }
-
+  
   @Test
+  def colopt() {
+    heroe = new Heroe(fuerzaBase = 10, trabajo = Some(Ladron))
+    assertEquals(10, heroe.fuerzaBase)
+  }
+  
+  @Test
+  def holaColo() {
+    heroe = new Heroe(fuerzaBase = 10, trabajo = Some(Ladron))
+    assertEquals(10, heroe.fuerzaBase)
+    assertEquals(5, heroe.equiparHeroe.fuerzaBase)
+  }
+
+ /* @Test
   def trabajoMago() {
     val heroeMago: Heroe = Mago.cambiarTrabajo(heroe)
     assertEquals(7, heroeMago.hpBase)
@@ -75,5 +88,5 @@ class TestHeroe {
     assertEquals(heroeEquipado.fuerzaBase, heroeEquipado.hpBase)
     assertEquals(true, heroeEquipado.inventario.contains(EspadaDeLaVida))
     assertEquals(1, heroeEquipado.inventario.length)
-  }
+  }*/
 }

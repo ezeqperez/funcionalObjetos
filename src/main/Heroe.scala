@@ -1,30 +1,23 @@
 package main
 
 import main.trabajo.Trabajo
+import main.trabajo.Ladron
 
-class Heroe(val hpBase: Int, val fuerzaBase: Int, val velocidadBase: Int, val inteligenciaBase: Int, val trabajo: Option[Trabajo],
-                 var inventario: List[Item]) {
+case class Heroe(val hpBase: Int = 1, val fuerzaBase: Int = 1, val velocidadBase: Int = 1, val inteligenciaBase: Int = 1, val trabajo: Option[Trabajo] = None,
+                 var inventario: Option[List[Item]] = None) {
   require(hpBase > 0, "El hp debe ser mayor a cero")
   require(fuerzaBase > 0, "La fuerza debe ser mayor a cero")
   require(velocidadBase > 0, "La velocidad debe ser mayor a cero")
   require(inteligenciaBase > 0, "La inteligencia debe ser mayor a cero")
-
-  def this(hpBase: Int, fuerzaBase: Int, velocidadBase: Int, inteligenciaBase: Int) =
-    this(hpBase, fuerzaBase, velocidadBase, inteligenciaBase, None, Nil);
   
-  def copy(hpBase: Int, fuerzaBase: Int, velocidadBase: Int, inteligenciaBase: Int) : Heroe = {
-    return new Heroe(hpBase.max(1), fuerzaBase.max(1), velocidadBase.max(1), inteligenciaBase.max(1))
+  def cambiarTrabajo(heroe: Heroe, trabajo: Trabajo): Heroe = {
+    return this.copy(trabajo = Option(trabajo))
   }
   
-  def copy(hpBase: Int, fuerzaBase: Int, velocidadBase: Int, inteligenciaBase: Int, trabajo: Option[Trabajo]) : Heroe = {
-    return new Heroe(hpBase.max(1), fuerzaBase.max(1), velocidadBase.max(1), inteligenciaBase.max(1), trabajo, Nil)
-  }
-  
-  def copy(hpBase: Int, fuerzaBase: Int, velocidadBase: Int, inteligenciaBase: Int, inventario: List[Item]) : Heroe = {
-    return new Heroe(hpBase.max(1), fuerzaBase.max(1), velocidadBase.max(1), inteligenciaBase.max(1), None, inventario)
-  }
-  
-  def copy(hpBase: Int, fuerzaBase: Int, velocidadBase: Int, inteligenciaBase: Int, trabajo: Option[Trabajo], inventario: List[Item]) : Heroe = {
-    return new Heroe(hpBase.max(1), fuerzaBase.max(1), velocidadBase.max(1), inteligenciaBase.max(1), trabajo, inventario)
+  def equiparHeroe : Heroe = {
+    trabajo match {
+      case Some(trab) => return trab.modificarStats(this)
+      case None => return this
+    }
   }
 }
