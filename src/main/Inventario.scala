@@ -60,13 +60,13 @@ Vincha del búfalo de agua: Si el héroe tiene más fuerza que inteligencia, +30
 //Talismán maldito: Todos los stats son 1.
 object TalismanMaldito extends ItemTalisman {
   def equipar(heroe: Heroe): Heroe = {
-    return heroe.copy(inventario = nuevoInventario(heroe.inventario.get), hpBase = 1, fuerzaBase = 1, inteligenciaBase = 1, velocidadBase = 1)
+    return heroe.copy(inventario = Some(nuevoInventario(heroe.inventario.get)), hpBase = 1, fuerzaBase = 1, inteligenciaBase = 1, velocidadBase = 1)
   }
 }
 
 //Espada de la Vida: Hace que la fuerza del héroe sea igual a su hp.
 object EspadaDeLaVida extends ItemMano {
   def equipar(heroe: Heroe): Heroe = {
-    return heroe.copy(hpBase = heroe.hpBase, fuerzaBase = heroe.hpBase, velocidadBase = heroe.velocidadBase, inteligenciaBase = heroe.inteligenciaBase, inventario = nuevoInventario(heroe.inventario.get))
+    return heroe.copy(hpBase = heroe.hpBase, fuerzaBase = heroe.hpBase, velocidadBase = heroe.velocidadBase, inteligenciaBase = heroe.inteligenciaBase, inventario = Some(nuevoInventario(heroe.inventario.get)))
   }
 }

@@ -37,8 +37,3 @@ object Ladron extends Trabajo {
   val velocidad = 10
   val inteligencia = 0
 }
-/*case object Ladron extends Trabajo {
-    override def modificarStats(heroe : Heroe) : Heroe = {
-    return heroe.copy(fuerzaBase = (heroe.fuerzaBase - 5).max(1), velocidadBase = (heroe.velocidadBase + 10).max(1))
-  }
-}*/
