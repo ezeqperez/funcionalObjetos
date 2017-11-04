@@ -36,18 +36,18 @@ class TestHeroe {
     */
   }
   
-  @Test
-  def colopt() {
+/*  @Test
+  def base() {
     heroe = new Heroe(fuerzaBase = 10, trabajo = Some(Ladron))
     assertEquals(10, heroe.fuerzaBase)
   }
   
   @Test
-  def holaColo() {
+  def conTrabajo() {
     heroe = new Heroe(fuerzaBase = 10, trabajo = Some(Ladron))
     assertEquals(10, heroe.fuerzaBase)
     assertEquals(5, heroe.equiparHeroe.fuerzaBase)
-  }
+  }*/
 
  /* @Test
   def trabajoMago() {
