@@ -1,6 +1,6 @@
 package main.trabajo
 
-import main.Heroe
+import main._
 
 trait Trabajo {
   val hp: Int
@@ -8,12 +8,8 @@ trait Trabajo {
   val velocidad: Int
   val inteligencia: Int
 
-  def cambiarTrabajo(heroe: Heroe): Heroe = {
-    return heroe.copy(hpBase = heroe.hpBase + hp, 
-                      fuerzaBase = heroe.fuerzaBase + fuerza,
-                      velocidadBase = heroe.velocidadBase + velocidad, 
-                      inteligenciaBase = heroe.inteligenciaBase + inteligencia,
-                      trabajo = Option(this))
+  def stats : Stat = {
+    return new Stat(hp,fuerza,velocidad,inteligencia)
   }
 }
 
