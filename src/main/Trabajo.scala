@@ -1,4 +1,4 @@
-package main.trabajo
+package main
 
 import main._
 
@@ -11,23 +11,27 @@ trait Trabajo {
   def stats : Stat = {
     return new Stat(hp,fuerza,velocidad,inteligencia)
   }
+  
+  def statPrincipal : Int = {
+    return List(hp,fuerza,velocidad,inteligencia).max
+  }
 }
 
-object Guerrero extends Trabajo {
+case object Guerrero extends Trabajo {
   val hp = 10
   val fuerza = 15
   val velocidad = 0
   val inteligencia = -10
 }
 
-object Mago extends Trabajo {
+case object Mago extends Trabajo {
   val hp = 0
   val fuerza = -20
   val velocidad = 0
   val inteligencia = 20
 }
 
-object Ladron extends Trabajo {
+case object Ladron extends Trabajo {
   val hp = -5
   val fuerza = 0
   val velocidad = 10

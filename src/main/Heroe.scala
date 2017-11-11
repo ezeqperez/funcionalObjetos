@@ -1,6 +1,6 @@
 package main
 
-import main.trabajo.Trabajo
+import main._
 
 case class Heroe(hpBase: Int = 1, fuerzaBase: Int = 1, velocidadBase: Int = 1, inteligenciaBase: Int = 1,
                           trabajo: Option[Trabajo] = None, items: Option[List[Item]] = None) {
@@ -10,7 +10,7 @@ case class Heroe(hpBase: Int = 1, fuerzaBase: Int = 1, velocidadBase: Int = 1, i
   require(inteligenciaBase > 0, "La inteligencia debe ser mayor a cero")
   
   val statsIniciales = new Stat(hpBase,fuerzaBase,velocidadBase,inteligenciaBase)
-  //val inventario
+  val inventario = new Inventario(items, this)
   
   private def statsDeTrabajo : Stat = {
     trabajo match {
@@ -24,6 +24,6 @@ case class Heroe(hpBase: Int = 1, fuerzaBase: Int = 1, velocidadBase: Int = 1, i
   }
   
   def stats : Stat = {
-    return statsIniciales.mergarCon(statsDeTrabajo)
+    return inventario.mergearStatsCon(statsIniciales.mergarCon(statsDeTrabajo))
   }
 }
