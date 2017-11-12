@@ -4,44 +4,13 @@ import scala.collection.mutable.ListBuffer
 import main._
 
 class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
-  var cabeza: Option[Item] = None
-  var cuerpo: Option[Item] = None
-  var manos: Option[Item] = None
-  var talismanes: Option[List[Item]] = None
-
-  items match {
-    case Some(items) => this.equiparCon(items)
-    case None        =>
+  var equipo = items.getOrElse(List()).filter(puedeEquiparse _)
+  
+  def puedeEquiparse(unItem: Item) : Boolean = {
+    heroe.teSirve(unItem)
   }
-
-  def equiparUn(item: Item): Unit = {
-    if (item.puedeEquiparseEn(heroe))
-      item match {
-        case item: Casco    => cabeza = Some(item)
-        case item: Torso    => cuerpo = Some(item)
-        case item: Mano     => manos = Some(item)       //FIXME falta lo de dos manos
-        case item: Talisman => agregarTalisman(item)
-      }
-  }
-
-  private def agregarTalisman(item: Talisman) = {
-    talismanes = talismanes match {
-      case Some(lista) => Some(lista.to[ListBuffer].+=(item).toList)
-      case None        => Some(new ListBuffer().+=(item).toList)
-    }
-  }
-
-  private def equiparCon(items: List[Item]): Unit = {
-    items.foreach(item => this.equiparUn(item))
-  }
-
-  def equipamiento: List[Item] = {
-    return List(cabeza, cuerpo, manos).filterNot(_.isEmpty).map(_.get).++(talismanes.getOrElse(List()))
-  }
-
-  def mergearStatsCon(statsIniciales: Stat): Stat = {
-    return equipamiento.map(_.efectoPara.curried(heroe)).foldLeft(statsIniciales) { (semilla, funcion) => funcion(semilla) }
-  }
+  
+  //FIXME ver manera de que haya un solo item de su tipo
 
 }
 
@@ -55,7 +24,7 @@ abstract case class Casco(val efectoPara: (Heroe, Stat) => Stat = null) extends 
 abstract case class Torso(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
 abstract case class Mano(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
 abstract case class Talisman(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-
+/*
 object cascoVikingo extends Casco({ (_, s) => s.copy(hp = s.hp + 30) }) {
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
     return heroe.fuerzaBase > 30
@@ -147,4 +116,4 @@ object vinchaBufalo extends Casco {
 
 object talismanMaldito extends Talisman({ (_, s) => s.copy(1, 1, 1, 1) })
 
-object espadaDeLaVida extends Mano((_, s) => s.copy(fuerza = s.hp))
+object espadaDeLaVida extends Mano((_, s) => s.copy(fuerza = s.hp))*/

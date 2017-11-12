@@ -24,7 +24,7 @@ class TestHeroe {
     assertEquals(3, heroe.velocidadBase)
     assertEquals(2, heroe.inteligenciaBase)
     assertEquals(None, heroe.trabajo)
-    assertEquals(true, heroe.inventario.isEmpty)
+    //assertEquals(true, heroe.inventario.isEmpty)
   }
 
   @Test
