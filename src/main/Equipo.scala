@@ -1,9 +1,43 @@
 package main
 
-class Equipo {
-  val nombre: String = ""
-  var integrantes: List[Heroe] = Nil
-  var pozo: Int = 0
+import scala.math.Ordered._
+
+class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, pozo: Int = 0) {
+  
+  def mejorHeroeSegun(criterio: (Heroe => Int)) : Heroe = {
+    return integrantes.getOrElse(List()).maxBy(criterio)
+  }
+  
+  def obtenerItem() //TODO
+  
+  
+  private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe])= {
+    integrantes.fold[List[Heroe]](List()){funcion(_)}
+  }
+  
+  private def anexarHeroe(heroe: Heroe)(lista: List[Heroe]) = {
+    lista.+:(heroe)
+  }
+  
+  private def removerHeroe(heroe: Heroe)(lista: List[Heroe]) = {
+    lista.filterNot(_.equals(heroe))
+  }
+  
+  
+  def obtenerMiembro(nuevo: Heroe) = {
+    integrantes = Some(modificarListaIntegrantesCon(anexarHeroe(nuevo)))
+  }
+  
+  private def quitarMiembro(viejo: Heroe) = {
+    integrantes = Some(modificarListaIntegrantesCon(removerHeroe(viejo)))
+  }
+  
+  def reemplazarMiembro(viejo: Heroe, nuevo: Heroe) = {
+    if(!integrantes.isEmpty) {
+      quitarMiembro(viejo)
+      obtenerMiembro(nuevo)
+    }
+  }
 }
 
 class Mision {
