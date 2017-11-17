@@ -10,12 +10,11 @@ case class Heroe(statsIniciales : Stat = new Stat, trabajo: Option[Trabajo] = No
     return this.copy(trabajo = Option(trabajo))
   }
   
-  def teSirve(unItem: Item) : Boolean = {
-    return true //FIXME cambiar
-  }
-  
   def statPrincipal() = trabajo.map(_.statPrincipal)
   
   def stats = trabajo.map(_.stats).fold(statsIniciales){identity(_)}
-
+  
+  def fuerzaBase = statsIniciales.getFuerza
+  
+  def inteligenciaBase = statsIniciales.getInteligencia
 }

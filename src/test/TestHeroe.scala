@@ -4,29 +4,38 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import main._
-import main.trabajo.Mago
-import main.trabajo.Ladron
-import main.trabajo.Guerrero
 import junit.framework.AssertionFailedError
 
 class TestHeroe {
-  var heroe: Heroe = null
-
+  var statBase : Stat = null
+  var statBase2 : Stat = null
+  var heroe : Heroe = null
+  var listaItems : Option[List[Item]] = null
+  var statEsperado : Stat = null
+  var statEsperado2 : Stat = null
+  var statEsperado3 : Stat = null
+  
+  
   @Before
   def setUp() {
-    heroe = new Heroe(7, 4, 3, 2)
+    statBase = new Stat()
+    statBase2 = new Stat(10,10,10,10)
+    listaItems = Some(List(cascoVikingo))
+    heroe = new Heroe(statBase,None,listaItems)
+    statEsperado = statBase.copy(hp = statBase.hp + 30)
+    statEsperado2 = statBase.copy(velocidad = statBase.velocidad + 30)
+    statEsperado3 = new Stat(10,10,10,10)
   }
 
   @Test
-  def crearHeroe() {
-    assertEquals(7, heroe.hpBase)
-    assertEquals(4, heroe.fuerzaBase)
-    assertEquals(3, heroe.velocidadBase)
-    assertEquals(2, heroe.inteligenciaBase)
-    assertEquals(None, heroe.trabajo)
-    //assertEquals(true, heroe.inventario.isEmpty)
+  def testeoDeObjetos() {
+    assertEquals(new Stat(31,1,1,1), cascoVikingo.efectoPara(heroe,statBase))
+    assertEquals(new Stat(1,1,31,1), armaduraEleganteSport.efectoPara(heroe,statBase))
+    //assertEquals(new Stat(2,2,2,2), talismanDedicacion.efectoPara(heroe,statBase))
+    assertEquals(new Stat(11,11,11,11), vinchaBufalo .efectoPara(heroe,statBase))
+   
   }
-
+/*
   @Test
   def statsPositivos() {
     /* tirar excepcion
@@ -90,3 +99,4 @@ class TestHeroe {
     assertEquals(1, heroeEquipado.inventario.length)
   }*/
 }
+*/}

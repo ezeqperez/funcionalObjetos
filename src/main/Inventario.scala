@@ -7,31 +7,36 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
   var equipo = items.getOrElse(List()).filter(puedeEquiparse _)
   
   def puedeEquiparse(unItem: Item) : Boolean = {
-    heroe.teSirve(unItem)
-  }
-  
-  //FIXME ver manera de que haya un solo item de su tipo
+    unItem.puedeEquiparseEn(heroe)
+  }//FIXME ver manera de que haya un solo item de su tipo
 
 }
 
 trait Item {
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
 
-  val efectoPara: (Heroe, Stat) => Stat //obligo a parametrizar la funcion que modifica los stats
+  def efectoPara(heroe: Heroe, stat: Stat): Stat = new Stat()//obligo a parametrizar la funcion que modifica los stats
+  
 }
 
-abstract case class Casco(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-abstract case class Torso(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-abstract case class Mano(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-abstract case class Talisman(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-/*
-object cascoVikingo extends Casco({ (_, s) => s.copy(hp = s.hp + 30) }) {
+abstract case class Casco() extends Item
+abstract case class Torso() extends Item
+abstract case class Mano() extends Item
+abstract case class Talisman() extends Item
+
+
+object cascoVikingo extends Casco() {
+  
+  override def efectoPara(h :Heroe, s: Stat): Stat = {
+    return s.copy(hp=s.hp+30)
+  }
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
     return heroe.fuerzaBase > 30
   }
 }
 
-object palitoMagico extends Mano({ (_, s) => s.copy(inteligencia = s.inteligencia + 20) }) {
+object palitoMagico extends Mano() {
+ 
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
     heroe.trabajo match {
       case None    => false
@@ -46,13 +51,25 @@ object palitoMagico extends Mano({ (_, s) => s.copy(inteligencia = s.inteligenci
       case _                                       => false
     }
   }
+  
+  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
+    return s.copy(inteligencia = s.inteligencia + 20)
+  }
 }
 
-object armaduraEleganteSport extends Torso({ (_, s) => s.copy(hp = s.hp - 30, velocidad = s.velocidad + 30) })
+object armaduraEleganteSport extends Torso(){
+  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
+    return s.copy(hp = 1.max(s.hp - 30), velocidad = s.velocidad + 30)
+  }
+}
 
-object arcoViejo extends Mano({ (h, s) => s.copy(fuerza = s.fuerza + 2) })
+object arcoViejo extends Mano(){
+  override def efectoPara(heroe: Heroe, s: Stat): Stat ={
+  return s.copy(fuerza = s.fuerza + 2)
+  }
+}
 
-object escudoAntiRobo extends Mano({ (h, s) => s.copy(hp = s.hp + 20) }) {
+object escudoAntiRobo extends Mano() {
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
     heroe.trabajo match {
       case None    => false
@@ -67,34 +84,38 @@ object escudoAntiRobo extends Mano({ (h, s) => s.copy(hp = s.hp + 20) }) {
       case _                            => true
     }
   }
+  
+  override def efectoPara(heroe: Heroe, s: Stat): Stat ={
+  return s.copy(hp = s.hp + 20)
+  }
 }
 
 object talismanDedicacion extends Talisman {
-  override val efectoPara: (Heroe, Stat) => Stat = (heroe, stat) => {
+  override def efectoPara(heroe: Heroe,stat: Stat): Stat = {
 
     val aumentoDe = (0.1 * (heroe.trabajo match {
       case Some(trabajo) => trabajo.statPrincipal
       case None          => 0
     })).toInt
 
-    stat.copy(
-      hp = stat.hp * aumentoDe,
-      fuerza = stat.fuerza * aumentoDe,
-      velocidad = stat.velocidad * aumentoDe,
-      inteligencia = stat.inteligencia * aumentoDe)
+    return stat.copy(
+      hp = stat.hp + aumentoDe,
+      fuerza = stat.fuerza + aumentoDe,
+      velocidad = stat.velocidad + aumentoDe,
+      inteligencia = stat.inteligencia + aumentoDe)
   }
 }
 
 object talismanMinimalismo extends Talisman {
-  override val efectoPara: (Heroe, Stat) => Stat = (heroe, stat) => {
+  override def efectoPara (heroe: Heroe, stat: Stat): Stat =  {
 
-    val vidaPerdida = heroe.inventario.equipamiento.length * 10
+    val vidaPerdida = heroe.inventario.items.getOrElse(List()).length * 10
 
-    stat.copy(
-      hp = stat.hp - vidaPerdida,
-      fuerza = stat.fuerza - vidaPerdida,
-      velocidad = stat.velocidad - vidaPerdida,
-      inteligencia = stat.inteligencia - vidaPerdida)
+    return stat.copy(
+      hp = 1.max(stat.hp - vidaPerdida),
+      fuerza = 1.max(stat.fuerza - vidaPerdida),
+      velocidad = 1.max(stat.velocidad - vidaPerdida),
+      inteligencia = 1.max(stat.inteligencia - vidaPerdida))
   }
 }
 
@@ -106,14 +127,24 @@ object vinchaBufalo extends Casco {
     }
   }
 
-  override val efectoPara: (Heroe, Stat) => Stat = (heroe, stat) => {
+  override def efectoPara (heroe: Heroe, stat: Stat): Stat =  {
     heroe match {
-      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) => stat.copy(inteligencia = stat.inteligencia + 30)
-      case _ => stat.copy(hp = stat.hp + 10, fuerza = stat.fuerza + 10, velocidad = stat.velocidad + 10)
+      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) => return stat.copy(inteligencia = stat.inteligencia + 30)
+      case _ => return stat.copy(hp = stat.hp + 10, fuerza = stat.fuerza + 10, velocidad = stat.velocidad + 10,inteligencia = stat.inteligencia + 10)
     }
   }
 }
 
-object talismanMaldito extends Talisman({ (_, s) => s.copy(1, 1, 1, 1) })
+object talismanMaldito extends Talisman(){
+  override def efectoPara (heroe: Heroe, stat: Stat): Stat =  {
+    return stat.copy(1, 1, 1, 1)
+  }
+  
+}
 
-object espadaDeLaVida extends Mano((_, s) => s.copy(fuerza = s.hp))*/
+object espadaDeLaVida extends Mano(){
+  
+  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
+    return stat.copy(fuerza = stat.hp)
+  }
+}
