@@ -8,7 +8,7 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, p
     return integrantes.getOrElse(List()).maxBy(criterio)
   }
   
-  def obtenerItem() //TODO
+  def obtenerItem()
   
   
   private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe])= {
@@ -38,6 +38,13 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, p
       obtenerMiembro(nuevo)
     }
   }
+  
+  def mayorStatPrincipalDe(heroe: Heroe) : Int = {
+    return heroe.statPrincipal().getOrElse(0)
+  }
+  
+  def lider() = integrantes.map(_.maxBy(mayorStatPrincipalDe(_)))
+  
 }
 
 class Mision {
