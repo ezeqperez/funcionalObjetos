@@ -15,9 +15,20 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
      modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item))    //falta agregarle el item
   }
   
-  private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
-    heroe.copy().probar(item).statPrincipal - heroe.statPrincipal.getOrElse(0)    //FIXME, mal calculo, para salir del paso
+  def obtenerMiembro(nuevo: Heroe) = {
+    integrantes = Some(modificarListaIntegrantesCon(anexarHeroe(nuevo)))
   }
+  
+  def reemplazarMiembro(viejo: Heroe, nuevo: Heroe) = {
+    if(!integrantes.isEmpty) {
+      quitarMiembro(viejo)
+      obtenerMiembro(nuevo)
+    }
+  }
+  
+  def lider() = integrantes.map(_.maxBy(_.statPrincipal))  //puede haber o no un lider, es un Option
+  
+  
   
   private def losQueTrabajan(lista: List[Heroe]) = {
     lista.filterNot(_.statPrincipal.isEmpty)
@@ -27,7 +38,11 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     lista.filter(diferenciaConMainStatDe(item)(_) > 1)
   }
   
-  val losQueSirvenPara = (item: Item) => puedeServirlesUn(item) _ compose losQueTrabajan _
+  private val losQueSirvenPara = (item: Item) => puedeServirlesUn(item) _ compose losQueTrabajan _
+  
+  private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
+    heroe.copy().probar(item).statPrincipal - heroe.statPrincipal.getOrElse(0)    //FIXME, mal calculo, para salir del paso
+  }
   
   
   private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe])= {
@@ -42,22 +57,7 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     lista.filterNot(_.equals(heroe))
   }
   
-  
-  def obtenerMiembro(nuevo: Heroe) = {
-    integrantes = Some(modificarListaIntegrantesCon(anexarHeroe(nuevo)))
-  }
-  
   private def quitarMiembro(viejo: Heroe) = {
     integrantes = Some(modificarListaIntegrantesCon(removerHeroe(viejo)))
   }
-  
-  def reemplazarMiembro(viejo: Heroe, nuevo: Heroe) = {
-    if(!integrantes.isEmpty) {
-      quitarMiembro(viejo)
-      obtenerMiembro(nuevo)
-    }
-  }
-  
-  def lider() = integrantes.map(_.maxBy(_.statPrincipal))  //puede haber o no un lider, es un Option
-  
 }
