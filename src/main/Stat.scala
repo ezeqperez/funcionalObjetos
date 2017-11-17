@@ -15,20 +15,4 @@ case class Stat(hp: Int = 1, fuerza: Int = 1, velocidad: Int = 1, inteligencia: 
     return List(hp,fuerza,velocidad,inteligencia).max
   }
   
-  def getFuerza : Int={
-    return fuerza
-  }
-  
-  def getHp : Int = {
-    return hp
-  }
-  
-  def getVelocidad : Int = {
-    return velocidad
-  }
-  
-  def getInteligencia : Int = {
-    return inteligencia
-  }
-  
 }

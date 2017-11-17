@@ -10,11 +10,14 @@ case class Heroe(statsIniciales : Stat = new Stat, trabajo: Option[Trabajo] = No
     return this.copy(trabajo = Option(trabajo))
   }
   
-  def statPrincipal() = trabajo.map(_.statPrincipal)
+  def probar(item: Item) = {
+    item.efectoPara(this, stats)
+  }
   
-  def stats = trabajo.map(_.stats).fold(statsIniciales){identity(_)}
+  def statPrincipal = trabajo.map(_.statPrincipal)
   
-  def fuerzaBase = statsIniciales.getFuerza
+  def stats = trabajo.map(_.stats).fold(statsIniciales){statsIniciales.+ _}
   
-  def inteligenciaBase = statsIniciales.getInteligencia
+  def fuerzaBase = statsIniciales.fuerza
+  def inteligenciaBase = statsIniciales.inteligencia
 }

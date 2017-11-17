@@ -2,13 +2,26 @@ package main
 
 import scala.math.Ordered._
 
-class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, pozo: Int = 0) {
+class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, var pozo: Int = 0) {
   
   def mejorHeroeSegun(criterio: (Heroe => Int)) : Heroe = {
     return integrantes.getOrElse(List()).maxBy(criterio)
   }
   
-  def obtenerItem()
+  def obtenerItem(item: Item)(lista: List[Heroe]) = {
+    if(lista.isEmpty)
+      pozo = pozo + item.precio
+    else
+     lista.maxBy(diferenciaConMainStatDe(item))   //agregarle el item
+  }
+  
+  private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
+    heroe.copy().probar(item).statPrincipal - heroe.statPrincipal.getOrElse(0)    //FIXME, mal calculo, para salir del paso
+  }
+  
+  private def losQueTrabajan(lista: List[Heroe]) = {
+    lista.filterNot(_.statPrincipal.isEmpty)
+  }
   
   
   private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe])= {
@@ -39,11 +52,11 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, p
     }
   }
   
-  def mayorStatPrincipalDe(heroe: Heroe) : Int = {
-    return heroe.statPrincipal().getOrElse(0)
+  private def mayorStatPrincipalDe(heroe: Heroe) : Int = {
+    return heroe.statPrincipal.getOrElse(0)
   }
   
-  def lider() = integrantes.map(_.maxBy(mayorStatPrincipalDe(_)))
+  def lider() = integrantes.map(_.maxBy(mayorStatPrincipalDe(_)))  //puede haber o no un lider, es un Option
   
 }
 
