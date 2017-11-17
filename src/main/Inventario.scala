@@ -3,15 +3,51 @@ package main
 import scala.collection.mutable.ListBuffer
 import main._
 
-class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
-  var equipo = items.getOrElse(List()).filter(puedeEquiparse _)
+class Inventario(var items: Option[List[Item]] = None) {
   
-  def puedeEquiparse(unItem: Item) : Boolean = {
+  var equipo = itemsSinRepetidos(items.fold[List[Item]](List()) {identity(_)})
+
+  def puedeEquiparse(unItem: Item, heroe : Heroe): Boolean = {
     heroe.teSirve(unItem)
   }
-  
-  //FIXME ver manera de que haya un solo item de su tipo
+  def itemsSinRepetidos(items: List[Item]): List[Item] = {
+    var itemsDefinitivos: List[Item] = List()
+    List(Casco, Torso, Talisman, UnaMano).foreach(x =>
+      x match {
+        case Casco    => itemsDefinitivos = itemsDefinitivos ::: (eleccion(items.filter(item => item.isInstanceOf[Casco])))
+        case Torso    => itemsDefinitivos = itemsDefinitivos ::: (eleccion(items.filter(item => item.isInstanceOf[Torso])))
+        case Talisman => itemsDefinitivos = itemsDefinitivos ::: items.filter(item => item.isInstanceOf[Talisman])
+        case _ => itemsDefinitivos = itemsDefinitivos ::: eleccionMano(items.filter(item => item.isInstanceOf[UnaMano] || item.isInstanceOf[DosManos]))
+      })
+      return itemsDefinitivos
 
+  }
+
+  def eleccion(items: List[Item]): List[Item] = {
+    if (!items.isEmpty) {
+      return List(items.tail(0))
+    }
+    return List()
+  }
+
+  def eleccionMano(items: List[Item]): List[Item] = {
+    if (!items.isEmpty) {
+      return List(items.tail(0)).:::(sonManos(items))
+    }
+    return List()
+  }
+  def sonManos(items: List[Item]) : List[Item] = {
+    if (items.tail(0).isInstanceOf[UnaMano] && items.length > 1) {
+      return esUnaMano(items.tail(1))
+    }
+    return List()
+  }
+  def esUnaMano(item : Item) : List[Item] ={
+    if (item.isInstanceOf[UnaMano]) {
+      return List(item)
+    }
+    return List()
+  }
 }
 
 trait Item {
@@ -22,7 +58,8 @@ trait Item {
 
 abstract case class Casco(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
 abstract case class Torso(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
-abstract case class Mano(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
+abstract case class UnaMano(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
+abstract case class DosManos(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
 abstract case class Talisman(val efectoPara: (Heroe, Stat) => Stat = null) extends Item
 /*
 object cascoVikingo extends Casco({ (_, s) => s.copy(hp = s.hp + 30) }) {
