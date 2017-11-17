@@ -12,7 +12,7 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     if(lista.isEmpty)
       pozo = pozo + item.precio
     else
-     lista.maxBy(diferenciaConMainStatDe(item))   //falta agregarle el item
+     modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item))    //falta agregarle el item
   }
   
   private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
@@ -26,7 +26,9 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
   private def puedeServirlesUn(item: Item)(lista: List[Heroe]) = {
     lista.filter(diferenciaConMainStatDe(item)(_) > 1)
   }
-
+  
+  val losQueSirvenPara = (item: Item) => puedeServirlesUn(item) _ compose losQueTrabajan _
+  
   
   private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe])= {
     integrantes.fold[List[Heroe]](List()){funcion(_)}
