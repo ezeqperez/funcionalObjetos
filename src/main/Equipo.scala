@@ -12,7 +12,7 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     if(lista.isEmpty)
       pozo = pozo + item.precio
     else
-     modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item))    //falta agregarle el item
+      modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item))    //falta agregarle el item
   }
   
   def obtenerMiembro(nuevo: Heroe) = {
