@@ -20,7 +20,7 @@ class TestHeroe {
   def setUp() {
     statBase = new Stat()
     statBase2 = new Stat(10,10,10,10)
-    listaItems = Some(List(cascoVikingo))
+    listaItems = Some(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,talismanMinimalismo,vinchaBufalo,palitoMagico,escudoAntiRobo,espadaDeLaVida))
     heroe = new Heroe(statBase,None,listaItems)
     statEsperado = statBase.copy(hp = statBase.hp + 30)
     statEsperado2 = statBase.copy(velocidad = statBase.velocidad + 30)
@@ -34,6 +34,20 @@ class TestHeroe {
     //assertEquals(new Stat(2,2,2,2), talismanDedicacion.efectoPara(heroe,statBase))
     assertEquals(new Stat(11,11,11,11), vinchaBufalo .efectoPara(heroe,statBase))
    
+
+  }
+
+
+  @Test
+  def crearHeroe() {
+    assertEquals(7, heroe.statsIniciales.hp)
+    assertEquals(4, heroe.statsIniciales.fuerza)
+    assertEquals(3, heroe.statsIniciales.velocidad)
+    assertEquals(2, heroe.statsIniciales.inteligencia)
+    assertEquals(List(), heroe.inventario.equipo)
+    assertEquals(None, heroe.trabajo)
+    //assertEquals(true, heroe.inventario.isEmpty)
+
   }
 /*
   @Test
