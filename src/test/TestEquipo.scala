@@ -28,4 +28,35 @@ class TestEquipo {
     assertEquals(equipo.mejorHeroeSegun({_.statPrincipal.getOrElse(0)}),heroeBueno)
   }
   
+  @Test
+  def seAgregaMiembroNuevo() {
+    val otro = new Heroe(new Stat(5,5,5,5))
+    equipo.obtenerMiembro(otro)
+   
+    assert(equipo.integrantes.get.contains(otro))
+  }
+  
+  @Test
+  def sePuedeReemplazarMiembro() {
+    val otro = new Heroe(new Stat(5,5,5,5))
+    equipo.reemplazarMiembro(heroeMalo,otro)
+   
+    assert(equipo.integrantes.get.contains(otro))
+    assert(!equipo.integrantes.get.contains(heroeMalo))
+  }
+  
+  @Test
+  def elLiderEsElHeroeBueno() {
+    
+    assertEquals(equipo.lider,Some(heroeBueno))
+  }
+  
+  @Test
+  def noHayLiderClaroEnAlgunosCasos() {
+    val otro = heroeBueno.copy()
+    equipo.obtenerMiembro(otro)
+    
+    assertEquals(equipo.lider,None)
+  }
+  
 }

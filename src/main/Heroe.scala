@@ -16,7 +16,7 @@ case class Heroe(statsIniciales : Stat = new Stat, trabajo: Option[Trabajo] = No
   
   def statPrincipal = trabajo.map(_.statPrincipal)
   
-  def stats = trabajo.map(_.stats).fold(statsIniciales){statsIniciales.+ _}
+  def stats = trabajo.fold(statsIniciales){_.apply(statsIniciales)}
   
   def fuerzaBase = statsIniciales.fuerza
   def inteligenciaBase = statsIniciales.inteligencia

@@ -8,8 +8,8 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     modificarListaIntegrantesCon(identity).maxBy(criterio)
   }
   
-  def obtenerItem(item: Item)(lista: List[Heroe]) = {
-    if(lista.isEmpty)
+  def obtenerItem(item: Item) = {
+    if(modificarListaIntegrantesCon(losQueSirvenPara(item)).isEmpty)
       pozo = pozo + item.precio
     else
       modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item))    //falta agregarle el item
@@ -59,5 +59,10 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
   
   private def quitarMiembro(viejo: Heroe) = {
     integrantes = Some(modificarListaIntegrantesCon(removerHeroe(viejo)))
+  }
+  
+  private def unLiderONadieEn(lista: List[Heroe]) = {
+    if(lista.filter(_.statPrincipal))
+      
   }
 }
