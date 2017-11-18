@@ -14,5 +14,4 @@ case class Stat(hp: Int = 1, fuerza: Int = 1, velocidad: Int = 1, inteligencia: 
   }
   
   private def atributos = List(hp,fuerza,velocidad,inteligencia)
-  
 }
