@@ -12,12 +12,12 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
   var itemsEquipados = itemsSinRepetidos(items.fold[List[Item]](List()) { identity(_) })
 
   def itemsSinRepetidos(items: List[Item]): List[Item] = {
-    return eleccion(items.filter(item => item.isInstanceOf[Casco])) ::: eleccion(items.filter(item => item.isInstanceOf[Torso])) ::: items.filter(item => item.isInstanceOf[Talisman]) ::: eleccionMano(items.filter(item => item.isInstanceOf[Mano]))
+    return eleccion(items.filter(_.isInstanceOf[Casco])) ::: eleccion(items.filter(_.isInstanceOf[Torso])) ::: items.filter(_.isInstanceOf[Talisman]) ::: eleccionMano(items.filter(_.isInstanceOf[Mano]))
   }
 
   def eleccion(items: List[Item]): List[Item] = {
-    if (!items.isEmpty && puedeEquiparse(items.tail(0))) {
-      return List(items.tail(0))
+    if (!items.isEmpty && puedeEquiparse(items.reverse.head) ) {
+      return List(items.reverse.head)
     } else if (!items.dropRight(1).isEmpty) {
       return eleccion(items.dropRight(1))
     }
@@ -25,7 +25,7 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
   }
 
   def eleccionMano(items: List[Item]): List[Item] = {
-    if (!items.isEmpty && puedeEquiparse(items.tail(0))) {
+    if (!items.isEmpty && puedeEquiparse(items.reverse.head)) {
       return List(items.tail(0)).:::(sonManos(items))
     } else if (!items.dropRight(1).isEmpty) {
       return eleccionMano(items.dropRight(1))
@@ -33,7 +33,7 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
     return List()
   }
   def sonManos(items: List[Item]): List[Item] = {
-    if (items.length > 1 && items.tail(0).asInstanceOf[Mano].manosNecesarias == 1 && items.tail(1).asInstanceOf[Mano].manosNecesarias == 1 && puedeEquiparse(items.tail(1))) {
+    if (items.length > 1 && items.reverse.head.asInstanceOf[Mano].manosNecesarias == 1 && items.reverse.take(2).last.asInstanceOf[Mano].manosNecesarias == 1 && puedeEquiparse(items.reverse.take(2).last)) {
       return List(items.tail(1))
     }else if(items.length > 1){
       sonManos(items.dropRight(1))
@@ -101,7 +101,7 @@ object cascoVikingo extends Casco() {
   }
 
 }
-object palitoMagico extends Mano(1) {
+object palitoMagico extends Mano(2) {
 
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
     heroe.trabajo match {
