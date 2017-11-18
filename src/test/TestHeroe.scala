@@ -44,7 +44,6 @@ class TestHeroe {
     assertEquals(4, heroe.statsIniciales.fuerza)
     assertEquals(3, heroe.statsIniciales.velocidad)
     assertEquals(2, heroe.statsIniciales.inteligencia)
-    assertEquals(List(), heroe.inventario.equipo)
     assertEquals(None, heroe.trabajo)
     //assertEquals(true, heroe.inventario.isEmpty)
 

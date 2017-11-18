@@ -43,15 +43,35 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
   
   
   def modificarInventario(unItem : Item){
-    if(itemsEquipados.exists(item => unItem.getClass.equals(item.getClass))){
-      //FIXME itemsEquipados = itemsEquipados.map(item => reemplazar(item,unItem))
+    if(hayQueReemplazarPor(unItem)){
+      reemplazarCon(unItem)
     }else{
       itemsEquipados.+:(unItem)
     }
   }
-  def reemplazar(unItem : Item, item : Item){
-  //FIXME lograr resolver el reemplazo de manos
+  def reemplazarCon(item : Item){
+    itemsEquipados = itemsEquipados.filterNot(_.getClass.equals(item.getClass)).+:(item)
+  }
+  
+  def hayQueReemplazarPor(item: Item) : Boolean = {
+    return item match{
+      case Casco() => yaHayDeTipoDe(item)
+      case Torso() => yaHayDeTipoDe(item)
+      case Mano(manos) => manosOcupadasPara(manos)
     }
+  }
+  
+  def yaHayDeTipoDe(item: Item) : Boolean = {
+    itemsEquipados.exists(_.getClass.equals(item.getClass))
+  }
+  
+  def manosOcupadasPara(manos: Int): Boolean = {
+    return manos match{
+      case 1 => itemsEquipados.count(_.getClass.equals(Mano)) == 2
+      case _ => true
+    }
+  }
+  
 }
 
 trait Item {
