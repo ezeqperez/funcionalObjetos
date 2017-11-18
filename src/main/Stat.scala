@@ -1,10 +1,7 @@
 package main
 
 case class Stat(hp: Int = 1, fuerza: Int = 1, velocidad: Int = 1, inteligencia: Int = 1) {
-  require(hp > 0, "El hp debe ser mayor a cero")
-  require(fuerza > 0, "La fuerza debe ser mayor a cero")
-  require(velocidad > 0, "La velocidad debe ser mayor a cero")
-  require(inteligencia > 0, "La inteligencia debe ser mayor a cero")
+  this.copy(1.max(hp), 1.max(fuerza), 1.max(velocidad), 1.max(inteligencia))
   
   
   def +(stat: Stat) : Stat = {

@@ -49,8 +49,14 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
       itemsEquipados.+:(unItem)
     }
   }
+  
+  def mismoTipoQue(item: Item)(otro: Item) = {
+    otro.getClass.equals(item.getClass)
+  }
+  
   def reemplazarCon(item : Item){
-    itemsEquipados = itemsEquipados.filterNot(_.getClass.equals(item.getClass)).+:(item)
+    var removible = itemsEquipados.find(mismoTipoQue(item))
+    itemsEquipados = itemsEquipados.filterNot(_.equals(removible)).+:(item)
   }
   
   def hayQueReemplazarPor(item: Item) : Boolean = {
@@ -62,7 +68,7 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
   }
   
   def yaHayDeTipoDe(item: Item) : Boolean = {
-    itemsEquipados.exists(_.getClass.equals(item.getClass))
+    itemsEquipados.exists(mismoTipoQue(item))
   }
   
   def manosOcupadasPara(manos: Int): Boolean = {
