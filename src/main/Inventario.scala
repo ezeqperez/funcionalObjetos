@@ -55,6 +55,8 @@ class Inventario(var items: Option[List[Item]] = None, var heroe: Heroe) {
 }
 
 trait Item {
+  val precio = 0
+  
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
 
   def efectoPara(heroe: Heroe, stat: Stat): Stat = new Stat() //obligo a parametrizar la funcion que modifica los stats
