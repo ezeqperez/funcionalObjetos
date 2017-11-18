@@ -3,8 +3,8 @@ package main
 import main._
 
 sealed trait Trabajo {
-  val stats : Stat
-  
+  val stats: Stat
+
   def statPrincipal = stats.statPrincipal
   
   val cambiarFuerzaEn = (valor: Int, stat: Stat) => stat.copy(fuerza = stat.fuerza + valor)
