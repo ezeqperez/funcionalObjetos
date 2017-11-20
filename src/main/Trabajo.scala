@@ -2,15 +2,9 @@ package main
 
 import main._
 
-sealed trait Trabajo {
+sealed trait Trabajo extends ModificacionDeStats{
   def statPrincipal : Int
   def apply : Stat => Stat
-  
-  protected def cambiarFuerzaEn (valor: Int)(stat: Stat) = stat.copy(fuerza = stat.fuerza + valor)
-  protected def cambiarHpEn (valor: Int)(stat: Stat) = stat.copy(hp = stat.hp + valor)
-  protected def cambiarVelocidadEn (valor: Int)(stat: Stat) = stat.copy(velocidad = stat.velocidad + valor)
-  protected def cambiarInteligenciaEn (valor: Int)(stat: Stat) = stat.copy(inteligencia = stat.inteligencia + valor)
-
 }
 
 case object Guerrero extends Trabajo {

@@ -1,7 +1,7 @@
 package main
 
 
-case class Tarea() {
+case class Tarea() extends ModificacionDeStats{
 
 def facilidad(eq: Equipo, heroe: Heroe) = 1
 def efectoPara(heroe: Heroe, stat: Stat) = new Stat()
@@ -13,10 +13,6 @@ def efectoPara(heroe: Heroe, stat: Stat) = new Stat()
    - “robar talismán” le agrega un talismán al héroe.
    				tiene facilidad igual a la velocidad del héroe, pero no puede ser hecho por equipos cuyo líder no sea un ladrón
  */
-protected def cambiarFuerzaEn (valor: Int)(stat: Stat) = stat.copy(fuerza = stat.fuerza + valor)
-protected def cambiarHpEn (valor: Int)(stat: Stat) = stat.copy(hp = stat.hp + valor)
-protected def cambiarVelocidadEn (valor: Int)(stat: Stat) = stat.copy(velocidad = stat.velocidad + valor)
-protected def cambiarInteligenciaEn (valor: Int)(stat: Stat) = stat.copy(inteligencia = stat.inteligencia + valor)
 }
 
 class NoPuedeRealizarTareaException extends RuntimeException
