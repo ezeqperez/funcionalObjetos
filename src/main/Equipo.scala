@@ -28,6 +28,14 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
 
   def lider() = integrantes.map(_.maxBy(_.statPrincipal)) //puede haber o no un lider, es un Option
 
+  def cantidadDeLadrones() = {//integrantes.map(_.trabajo).filter(_ : Ladron).length
+    
+    integrantes.getOrElse(List()) match{ 
+      case List(heroes:Heroe) => 2 //FIXME
+      case _ => 0
+    }
+  }
+  
   private def losQueTrabajan(lista: List[Heroe]) = {
     lista.filterNot(_.statPrincipal.isEmpty)
   }
@@ -61,4 +69,5 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
   private def unLiderONadieEn(lista: List[Heroe]) = {
    // if(lista.filter(_.statPrincipal)) 
   }
+  
 }

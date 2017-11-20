@@ -4,12 +4,18 @@ trait Item {
   val precio = 0
 
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
-
-  def efectoPara(heroe: Heroe, stat: Stat): Stat = new Stat() //obligo a parametrizar la funcion que modifica los stats
-
+  
+  def efectoPara(heroe: Heroe, stat: Stat): Stat = new Stat() //obligo a parametrizar la funcion que modifica los stats  
+  
   def sosMiTipo(item: Item): Boolean = {
     return item.getClass.eq(this.getClass)
   }
+  
+  
+  protected def cambiarFuerzaEn (valor: Int)(stat: Stat) = stat.copy(fuerza = stat.fuerza + valor)
+  protected def cambiarHpEn (valor: Int)(stat: Stat) = stat.copy(hp = stat.hp + valor)
+  protected def cambiarVelocidadEn (valor: Int)(stat: Stat) = stat.copy(velocidad = stat.velocidad + valor)
+  protected def cambiarInteligenciaEn (valor: Int)(stat: Stat) = stat.copy(inteligencia = stat.inteligencia + valor)
 }
 
 abstract case class Casco() extends Item
@@ -18,12 +24,10 @@ abstract case class Mano(manosNecesarias: Int) extends Item
 abstract case class Talisman() extends Item
 
 object cascoVikingo extends Casco() {
-
-  override def efectoPara(h: Heroe, s: Stat): Stat = {
-    return s.copy(hp = s.hp + 30)
-  }
-
+  
+  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(30)(stat)
 }
+
 object palitoMagico extends Mano(1) {
 
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
@@ -41,21 +45,17 @@ object palitoMagico extends Mano(1) {
     }
   }
 
-  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
-    return s.copy(inteligencia = s.inteligencia + 20)
-  }
+  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarInteligenciaEn(20) (stat)
 }
 
 object armaduraEleganteSport extends Torso() {
-  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
-    return s.copy(hp = 1.max(s.hp - 30), velocidad = s.velocidad + 30)
-  }
+  
+  def efectoPara = cambiarHpEn(-30)_ compose cambiarVelocidadEn(30)_
+  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(-30)(cambiarVelocidadEn(30) (stat))
 }
 
 object arcoViejo extends Mano(1) {
-  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
-    return s.copy(fuerza = s.fuerza + 2)
-  }
+  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(2) (stat)
 }
 
 object escudoAntiRobo extends Mano(1) {
@@ -74,25 +74,23 @@ object escudoAntiRobo extends Mano(1) {
     }
   }
 
-  override def efectoPara(heroe: Heroe, s: Stat): Stat = {
-    return s.copy(hp = s.hp + 20)
-  }
+ override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(20) (stat)
 }
 
 object talismanDedicacion extends Talisman {
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-
-    val aumentoDe = (0.1 * (heroe.trabajo match {
+  
+  
+    
+  override def efectoPara(h :Heroe,s :Stat) :Stat = {
+    
+    val aumentoDe = (0.1 * (h.trabajo match {
       case Some(trabajo) => trabajo.statPrincipal
       case None          => 0
     })).toInt
-
-    return stat.copy(
-      hp = stat.hp + aumentoDe,
-      fuerza = stat.fuerza + aumentoDe,
-      velocidad = stat.velocidad + aumentoDe,
-      inteligencia = stat.inteligencia + aumentoDe)
+    
+   return cambiarFuerzaEn(aumentoDe)(cambiarInteligenciaEn(aumentoDe)(cambiarVelocidadEn(aumentoDe)(cambiarHpEn(aumentoDe) (s))))
   }
+  
 }
 
 object talismanMinimalismo extends Talisman {
@@ -100,13 +98,9 @@ object talismanMinimalismo extends Talisman {
 
     val vidaPerdida = heroe.inventario.items.length * 10
 
-    return stat.copy(
-      hp = 1.max(stat.hp - vidaPerdida),
-      fuerza = 1.max(stat.fuerza - vidaPerdida),
-      velocidad = 1.max(stat.velocidad - vidaPerdida),
-      inteligencia = 1.max(stat.inteligencia - vidaPerdida))
+     return cambiarFuerzaEn(-vidaPerdida)(cambiarInteligenciaEn(-vidaPerdida)(cambiarVelocidadEn(-vidaPerdida)(cambiarHpEn(-vidaPerdida) (stat))))
   }
-}
+}  
 
 object vinchaBufalo extends Casco {
   override def puedeEquiparseEn(heroe: Heroe): Boolean = {
@@ -117,9 +111,9 @@ object vinchaBufalo extends Casco {
   }
 
   override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-    heroe match {
-      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) => return stat.copy(inteligencia = stat.inteligencia + 30)
-      case _ => return stat.copy(hp = stat.hp + 10, fuerza = stat.fuerza + 10, velocidad = stat.velocidad + 10, inteligencia = stat.inteligencia + 10)
+    heroe match { 
+      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) =>  return cambiarInteligenciaEn(30) (stat)
+      case _ => return cambiarFuerzaEn(10)(cambiarInteligenciaEn(10)(cambiarVelocidadEn(10)(cambiarHpEn(10) (stat))))
     }
   }
 }
