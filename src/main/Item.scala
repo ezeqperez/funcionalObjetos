@@ -82,7 +82,7 @@ object talismanDedicacion extends Talisman {
 object talismanMinimalismo extends Talisman {
   override def efectoPara(heroe: Heroe)(stat: Stat) = {
 
-    val vidaPerdida = heroe.inventario.items.length * 10
+    val vidaPerdida =heroe.inventario.items.length * 10
 
     cambiarTodoEn(-vidaPerdida) (stat)
   }
@@ -110,7 +110,7 @@ object talismanMaldito extends Talisman() {
   }
 }
 
-object espadaDeLaVida extends Mano(1) {
+object espadaDeLaVida extends Mano(2) {
   override def efectoPara(heroe: Heroe)(stat: Stat) = {
     stat.copy(fuerza = stat.hp)
   }

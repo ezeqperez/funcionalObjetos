@@ -3,25 +3,33 @@ package main
 import scala.collection.mutable.ListBuffer
 import main._
 
-case class Inventario(val items: List[Item] = List()){
-
-  def crearInventario(lista: List[Item]): Inventario = {
-    var inv: Inventario = new Inventario(List())
-    for (i: Item <- lista) {
-      inv = inv.copy(agregarItem(i))
-    }
-    return inv
-  }
-
-  def equipar(item: Item, heroe: Heroe): Inventario = {
-    if (item.puedeEquiparseEn(heroe)) {
-      item.efectoPara(heroe)(heroe.stats)
-      this.crearInventario(agregarItem(item))
-    }
-    else
-      this
+object Inventario {  
+  def apply (items:List[Item]=List(),heroe:Heroe) : Inventario = {
+    return crearInventario(items, heroe)
   }
   
+  def crearInventario(items:List[Item],heroe:Heroe):Inventario={
+    if(!items.forall(item=> item.puedeEquiparseEn(heroe)) || !sinExtras(items)){
+      return new Inventario(List(),heroe)
+    }
+    return new Inventario(items,heroe)
+  }
+  
+  def sinExtras(items: List[Item]): Boolean = {
+      for (i: Item <- items) {
+       i match{
+         case Mano(1) => if(items.count(item => item.sosMiTipo(i)) > 2 || items.exists(item => item.sosMiTipo(espadaDeLaVida))){return false}  //FIXME es Mano(2) en vez de espadaDeLaVida
+         case Mano(2) => if(items.count(item => item.sosMiTipo(i)) != 1 || items.exists(item => item.sosMiTipo(escudoAntiRobo))){return false} //FIXME es Mano(1) en vez de escudoAntiRobo
+         case _ => if(items.count(item => item.sosMiTipo(i)) != 1) {return false}
+       }
+      }
+      return true
+    }
+}
+
+case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
+
+      
       //mapea los items a su funcion de efecto, la reduce en un fold de composicion, y la aplica al stat del parametro
   def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat = items.map(i => i.efectoPara(heroe)_).reduce((x,y) => y compose x)(stat)
 

@@ -3,18 +3,16 @@ package main
 import main._
 
 case class Heroe(statsIniciales: Stat = Stat(), trabajo: Option[Trabajo] = None, 
-    inventario: Inventario = new Inventario(), tareasRealizadas: List[Tarea] = List()) {
+    items:List[Item]= List() , tareasRealizadas: List[Tarea] = List()) {
   
-  def this(statsIniciales: Stat, trabajo: Option[Trabajo], items: List[Item], tareasRealizadas: List[Tarea]) {
-    this(statsIniciales, trabajo, inventario = new Inventario(items).crearInventario(items), tareasRealizadas)
-  }
-  
+  val inventario: Inventario = Inventario(items,this)
   def cambiarTrabajo(trabajo: Trabajo): Heroe = {
     return this.copy(trabajo = Option(trabajo))
   }
 
   def equipar(item: Item): Heroe = {
-    this.copy(inventario = inventario.equipar(item, this))
+   return this.copy(items = inventario.agregarItem(item))
+  
   }
 
   def statPrincipal = trabajo.map(_.statPrincipal)
