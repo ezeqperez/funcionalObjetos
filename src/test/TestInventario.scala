@@ -20,7 +20,7 @@ class TestInventario {
     heroe = new Heroe(Stat(10,10,10,10),None,listaItems,List())
     
     listaItemsBuena = List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
-        talismanMinimalismo, espadaDeLaVida)
+        talismanMinimalismo)
     heroeBueno = new Heroe(Stat(10,10,10,10),None,listaItemsBuena,List())
   }
 
@@ -31,8 +31,10 @@ class TestInventario {
 
   @Test
   def testeoDeInventarioBueno() {
+    
     assertEquals(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
-        talismanMinimalismo, espadaDeLaVida), heroeBueno.inventario.items)
+        talismanMinimalismo, espadaDeLaVida), heroeBueno.equipar(espadaDeLaVida).inventario.items)
   }
+  
   
 }

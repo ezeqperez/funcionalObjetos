@@ -34,9 +34,10 @@ case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
   def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat = items.map(i => i.efectoPara(heroe)_).reduce((x,y) => y compose x)(stat)
 
   def agregarItem(nuevoItem: Item): List[Item] = {
-    var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).::(nuevoItem)
+    var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).:+(nuevoItem)
     nuevoItem match {
-      case Mano(1) => nuevos.::(items.find(item => item.sosMiTipo(nuevoItem)).getOrElse(List()))
+      case Mano(1) => nuevos.:+(items.find(item => item.sosMiTipo(nuevoItem)).getOrElse(List()))
+      case _  =>
     }
     return nuevos
   }
