@@ -10,16 +10,17 @@ class TestEquipo {
   val statsBuenos = Stat(20, 20, 20, 20)
   val statsMalos = Stat()
 
-  var inventario: Inventario = new Inventario(List(cascoVikingo, armaduraEleganteSport))
-
   var heroeBueno: Heroe = null
+  var inventario: Inventario = Inventario(List(cascoVikingo, armaduraEleganteSport), heroeBueno)
+
+  
   val heroeMalo = new Heroe(statsMalos)
 
   var equipo: Equipo = null
 
   @Before
   def setUp() {
-    heroeBueno = new Heroe(statsBuenos, Some(Ladron), inventario)
+    heroeBueno = new Heroe(statsBuenos, Some(Ladron), inventario.items)
     equipo = new Equipo(integrantes = List(heroeBueno, heroeMalo))
   }
 

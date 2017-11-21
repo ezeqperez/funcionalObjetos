@@ -20,7 +20,7 @@ class TestHeroe {
 
   @Test
   def inventario() {
-    var inv = new Inventario(List(cascoVikingo, armaduraEleganteSport))
+    var inv = Inventario(List(cascoVikingo, armaduraEleganteSport),heroe)
     assertEquals(false, inv.items.isEmpty)
   }
   

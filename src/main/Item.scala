@@ -99,7 +99,7 @@ object vinchaBufalo extends Casco {
   override def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
     return heroe match { 
       case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) =>  cambiarInteligenciaEn(30) (stat)
-      case _ => cambiarFuerzaEn(10)(cambiarInteligenciaEn(10)(cambiarVelocidadEn(10)(cambiarHpEn(10) (stat))))
+      case _ => cambiarTodoEn(10)(stat)
     }
   }
 }
