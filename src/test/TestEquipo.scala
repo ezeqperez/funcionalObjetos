@@ -8,7 +8,7 @@ import junit.framework.AssertionFailedError
 
 class TestEquipo {
   val statsBuenos = Stat(20, 20, 20, 20)
-  val statsMalos = Stat(1, 1, 1, 1)
+  val statsMalos = Stat()
 
   var inventario: Inventario = new Inventario(List(cascoVikingo, armaduraEleganteSport))
 
@@ -19,30 +19,28 @@ class TestEquipo {
 
   @Before
   def setUp() {
-    equipo = new Equipo(integrantes = List(heroeBueno, heroeMalo))
     heroeBueno = new Heroe(statsBuenos, Some(Ladron), inventario)
+    equipo = new Equipo(integrantes = List(heroeBueno, heroeMalo))
   }
 
   @Test
-  def mejorHeroeSegunStatPrincipalEsElBueno() {
-    assertEquals(equipo.mejorHeroeSegun({ _.statPrincipal.getOrElse(0) }), heroeBueno)
+  def mejorHeroeSegunFunciona() {
+    assertEquals(equipo.mejorHeroeSegun{ _.getFuerza }, heroeBueno)
   }
   
   @Test
   def seAgregaMiembroNuevo() {
     val otro = new Heroe(Stat(5,5,5,5))
-    equipo.obtenerMiembro(otro)
-   
-    assert(equipo.integrantes.contains(otro))
+    assert(equipo.obtenerMiembro(otro).integrantes.contains(otro))
   }
   
   @Test
   def sePuedeReemplazarMiembro() {
     val otro = new Heroe(Stat(5,5,5,5))
-    equipo.reemplazarMiembro(heroeMalo,otro)
-   
-    assert(equipo.integrantes.contains(otro))
-    assert(!equipo.integrantes.contains(heroeMalo))
+    val nuevoEquipo = equipo.reemplazarMiembro(heroeMalo,otro)
+    
+    assert(nuevoEquipo.integrantes.contains(otro))
+    assert(!nuevoEquipo.integrantes.contains(heroeMalo))
   }
   
   @Test
@@ -54,8 +52,7 @@ class TestEquipo {
   @Test
   def noHayLiderClaroEnAlgunosCasos() {
     val otro = heroeBueno.copy()
-    equipo.obtenerMiembro(otro)
     
-    assertEquals(equipo.lider,None)
+    assertEquals(equipo.obtenerMiembro(otro).lider,None)
   }
 }

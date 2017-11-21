@@ -20,13 +20,15 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), va
   def reemplazarMiembro(viejo: Heroe, nuevo: Heroe) = {
     if (!integrantes.isEmpty)
       this.copy(integrantes = (anexarHeroe(nuevo)_ compose removerHeroe(viejo)_)(integrantes))
+    else
+      this
   }
 
   def lider() = {
     if (hayVariosLideres)
       None
     else
-      mejorHeroeSegun { valorStatPrincipalDe }
+      Some(mejorHeroeSegun { valorStatPrincipalDe })
   }
 
   def cantidadDe(trabajo: Trabajo) = {
