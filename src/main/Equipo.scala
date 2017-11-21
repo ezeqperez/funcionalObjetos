@@ -1,41 +1,39 @@
 package main
 
-import scala.math.Ordered._
-
-class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, var pozo: Int = 0) {
+case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), var pozo: Int = 0) {
 
   def mejorHeroeSegun(criterio: (Heroe => Int)): Heroe = {
-    modificarListaIntegrantesCon(identity).maxBy(criterio)
+    integrantes.maxBy(criterio)
   }
-  
+
   def obtenerItem(item: Item)(lista: List[Heroe]) = {
-    if(modificarListaIntegrantesCon(losQueSirvenPara(item)).isEmpty)
-      pozo = pozo + item.precio
+    if (aNadieLeSirve(item))
+      this.copy(pozo = pozo + item.precio)
     else
-      modificarListaIntegrantesCon(losQueSirvenPara(item)).maxBy(diferenciaConMainStatDe(item)) //falta agregarle el item
+      mejorHeroeSegun(diferenciaConMainStatDe(item)).equipar(item)
   }
 
   def obtenerMiembro(nuevo: Heroe) = {
-    integrantes = Some(modificarListaIntegrantesCon(anexarHeroe(nuevo)))
+    this.copy(integrantes = anexarHeroe(nuevo)(integrantes))
   }
 
   def reemplazarMiembro(viejo: Heroe, nuevo: Heroe) = {
-    if (!integrantes.isEmpty) {
-      quitarMiembro(viejo)
-      obtenerMiembro(nuevo)
-    }
+    if (!integrantes.isEmpty)
+      this.copy(integrantes = (anexarHeroe(nuevo)_ compose removerHeroe(viejo)_)(integrantes))
   }
 
-  def lider() = integrantes.map(_.maxBy(_.statPrincipal)) //puede haber o no un lider, es un Option
-
-  def cantidadDeLadrones() = {//integrantes.map(_.trabajo).filter(_ : Ladron).length
-    
-    integrantes.getOrElse(List()) match{ 
-      case List(heroes:Heroe) => 2 //FIXME
-      case _ => 0
-    }
+  def lider() = {
+    if (hayVariosLideres)
+      None
+    else
+      mejorHeroeSegun { valorStatPrincipalDe }
   }
-  
+
+  def cantidadDe(trabajo: Trabajo) = {
+
+    integrantes.filterNot(_.trabajo.isEmpty).map(_.trabajo.get).count(_ == trabajo)
+  }
+
   private def losQueTrabajan(lista: List[Heroe]) = {
     lista.filterNot(_.statPrincipal.isEmpty)
   }
@@ -46,12 +44,10 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
 
   private val losQueSirvenPara = (item: Item) => puedeServirlesUn(item) _ compose losQueTrabajan _
 
-  private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
-    heroe.copy().probar(item).statPrincipal - heroe.statPrincipal.getOrElse(0) //FIXME, mal calculo, para salir del paso
-  }
+  private def aNadieLeSirve(item: Item) = losQueSirvenPara(item)(integrantes).isEmpty
 
-  private def modificarListaIntegrantesCon(funcion: List[Heroe] => List[Heroe]) = {
-    integrantes.fold[List[Heroe]](List()) { funcion(_) }
+  private def diferenciaConMainStatDe(item: Item)(heroe: Heroe) = {
+    valorStatPrincipalDe(heroe.copy().equipar(item)) - valorStatPrincipalDe(heroe)
   }
 
   private def anexarHeroe(heroe: Heroe)(lista: List[Heroe]) = {
@@ -62,12 +58,10 @@ class Equipo(nombre: String = "", var integrantes: Option[List[Heroe]] = None, v
     lista.filterNot(_.equals(heroe))
   }
 
-  private def quitarMiembro(viejo: Heroe) = {
-    integrantes = Some(modificarListaIntegrantesCon(removerHeroe(viejo)))
-  }
-  
-  private def unLiderONadieEn(lista: List[Heroe]) = {
-   // if(lista.filter(_.statPrincipal)) 
-  }
-  
+  private def hayVariosLideres = integrantes.count(valorStatPrincipalDe(_) == maximoValorDeStatPrincipal) > 1
+
+  private def valorStatPrincipalDe(heroe: Heroe) = heroe.statPrincipal.getOrElse(0)
+
+  private def maximoValorDeStatPrincipal = mejorHeroeSegun { valorStatPrincipalDe }.statPrincipal.get //no hay problema con el Option aca
+
 }

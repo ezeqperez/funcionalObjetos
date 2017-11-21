@@ -13,7 +13,7 @@ class TestHeroe {
 
   @Before
   def setUp() {
-    statBase = new Stat(fuerza = 3, hp = 1, inteligencia = 2, velocidad = 10)
+    statBase = Stat(fuerza = 3, hp = 1, inteligencia = 2, velocidad = 10)
     heroe = new Heroe(statBase)
     ladron = new Heroe(statBase, trabajo = Some(Ladron))
   }
@@ -73,8 +73,8 @@ class TestHeroe {
 
   @Test
   def testeoDeObjetos() {
-    assertEquals(new Stat(31, 3, 10, 2), cascoVikingo.efectoPara(heroe, statBase))
-    assertEquals(new Stat(1, 3, 40, 2), armaduraEleganteSport.efectoPara(heroe, statBase))
-    assertEquals(new Stat(1, 3, 10, 32), vinchaBufalo.efectoPara(heroe, statBase))
+    assertEquals(Stat(31, 3, 10, 2), cascoVikingo.efectoPara(heroe, statBase))
+    assertEquals(Stat(1, 3, 40, 2), armaduraEleganteSport.efectoPara(heroe, statBase))
+    assertEquals(Stat(1, 3, 10, 32), vinchaBufalo.efectoPara(heroe, statBase))
   }
 }

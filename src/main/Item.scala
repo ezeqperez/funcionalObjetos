@@ -5,7 +5,7 @@ trait Item extends ModificacionDeStats{
 
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
   
-  def efectoPara(heroe: Heroe, stat: Stat): Stat = new Stat() 
+  def efectoPara(heroe: Heroe, stat: Stat): Stat = Stat() 
   
   def sosMiTipo(item: Item): Boolean = {
     return item.getClass.eq(this.getClass)

@@ -2,7 +2,7 @@ package main
 
 import main._
 
-case class Heroe(val statsIniciales: Stat = new Stat, val trabajo: Option[Trabajo] = None, 
+case class Heroe(val statsIniciales: Stat = Stat(), val trabajo: Option[Trabajo] = None, 
     val inventario: Inventario = new Inventario()) {
   
   def this(statsIniciales: Stat, trabajo: Option[Trabajo], items: List[Item]) {

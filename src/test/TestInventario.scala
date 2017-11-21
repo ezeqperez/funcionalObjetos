@@ -13,7 +13,7 @@ class TestInventario {
   @Before
   def setUp() {
     listaItems = List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,talismanMinimalismo,vinchaBufalo,palitoMagico,escudoAntiRobo,espadaDeLaVida)
-    heroe = new Heroe(new Stat(10,10,10,10),None,listaItems)
+    heroe = new Heroe(Stat(10,10,10,10),None,listaItems)
   }
 
   @Test
