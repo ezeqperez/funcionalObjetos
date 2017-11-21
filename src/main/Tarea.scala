@@ -1,36 +1,36 @@
 package main
 
 
-case class Tarea() extends ModificacionDeStats{
+trait Tarea extends ModificacionDeStats{
 
-def facilidad(eq: Equipo, heroe: Heroe) = 1
-def efectoPara(heroe: Heroe, stat: Stat) = Stat()
-
+  def facilidad(eq: Equipo, heroe: Heroe) : Int
+  def ejecutadaPor(heroe: Heroe) : Heroe
 }
 
-class NoPuedeRealizarTareaException extends RuntimeException
 
 object pelearContraMonstruo extends Tarea {
   
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-    stat match{
-      case _ if (stat.fuerza < 20) => return stat.copy()
-      case _ => return cambiarHpEn(-10)(stat)
-    }
-   }
-  override def facilidad(eq: Equipo, heroe: Heroe) = {
+  def ejecutadaPor(heroe: Heroe): Heroe = heroe
+  
+//  def ejecutadaPor(heroe: Heroe): Heroe = {
+//    stat match{
+//      case _ if (stat.fuerza < 20) => return stat.copy()
+//      case _ => return cambiarHpEn(-10)(stat)
+//    }
+//  } aca el heroe deberia tener un statFinal, sino imposible trackear su progreso
+  
+  def facilidad(eq: Equipo, heroe: Heroe) = {
      eq.lider match{
        
        case Some(h:Heroe) if(h.trabajo == Some(Guerrero)) => 20
        case Some(h:Heroe) => 10
-       case _ => throw new NoPuedeRealizarTareaException
      }
   }
 }
   
  object forzarPuerta extends Tarea{
    
-   override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
+   override def ejecutadaPor(heroe: Heroe, stat: Stat): Stat = {
      
      heroe.trabajo match{
        case Some(Mago) => return stat.copy()
@@ -39,7 +39,7 @@ object pelearContraMonstruo extends Tarea {
      }
    }
    
-   override def facilidad(eq: Equipo, heroe: Heroe): Int = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
+   override def facilidad(eq: Equipo, heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
 }
  
  
