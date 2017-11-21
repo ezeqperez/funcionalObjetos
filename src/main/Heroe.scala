@@ -2,11 +2,11 @@ package main
 
 import main._
 
-case class Heroe(val statsIniciales: Stat = Stat(), val trabajo: Option[Trabajo] = None, 
-    val inventario: Inventario = new Inventario()) {
+case class Heroe(statsIniciales: Stat = Stat(), trabajo: Option[Trabajo] = None, 
+    inventario: Inventario = new Inventario(), tareasRealizadas: List[Tarea] = List()) {
   
-  def this(statsIniciales: Stat, trabajo: Option[Trabajo], items: List[Item]) {
-    this(statsIniciales, trabajo, inventario = new Inventario(items))
+  def this(statsIniciales: Stat, trabajo: Option[Trabajo], items: List[Item], tareasRealizadas: List[Tarea]) {
+    this(statsIniciales, trabajo, inventario = new Inventario(items).crearInventario(items), tareasRealizadas)
   }
   
   def cambiarTrabajo(trabajo: Trabajo): Heroe = {
@@ -16,14 +16,18 @@ case class Heroe(val statsIniciales: Stat = Stat(), val trabajo: Option[Trabajo]
   def equipar(item: Item): Heroe = {
     this.copy(inventario = inventario.equipar(item, this))
   }
-  
-  def probar(item: Item) = {
-    item.efectoPara(this, stats)
-  }
 
   def statPrincipal = trabajo.map(_.statPrincipal)
+  
+  def stats = aplicarTareasA(statsItemsYTrabajo)
+  
+  
+  private def conTrabajo = trabajo.fold(statsIniciales){_.apply(statsIniciales)}
  
-  def stats = trabajo.fold(statsIniciales){_.apply(statsIniciales)}
+  private def statsItemsYTrabajo = inventario.listoParaEquiparEn(this)(conTrabajo)
+  
+  private def aplicarTareasA = tareasRealizadas.map(t => t.efectoPara(this)_).reduce((x,y) => y compose x)
+  
   
   def fuerzaBase = statsIniciales.fuerza
   def inteligenciaBase = statsIniciales.inteligencia

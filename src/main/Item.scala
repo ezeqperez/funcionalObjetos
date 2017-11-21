@@ -5,7 +5,7 @@ trait Item extends ModificacionDeStats{
 
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
   
-  def efectoPara(heroe: Heroe, stat: Stat): Stat = Stat() 
+  def efectoPara(heroe: Heroe)(stat: Stat): Stat
   
   def sosMiTipo(item: Item): Boolean = {
     return item.getClass.eq(this.getClass)
@@ -19,7 +19,7 @@ abstract case class Talisman() extends Item
 
 object cascoVikingo extends Casco() {
   
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(30)(stat)
+  override def efectoPara(heroe: Heroe)(stat: Stat)= cambiarHpEn(30)(stat)
 }
 
 object palitoMagico extends Mano(1) {
@@ -39,17 +39,16 @@ object palitoMagico extends Mano(1) {
     }
   }
 
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarInteligenciaEn(20) (stat)
+  override def efectoPara(heroe: Heroe)(stat: Stat) = cambiarInteligenciaEn(20) (stat)
 }
 
 object armaduraEleganteSport extends Torso() {
   
-  def efectoPara = cambiarHpEn(-30)_ compose cambiarVelocidadEn(30)_
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(-30)(cambiarVelocidadEn(30) (stat))
+  def efectoPara(heroe: Heroe)(stat: Stat) = (cambiarHpEn(-30)_ compose cambiarVelocidadEn(30)_) (stat)
 }
 
 object arcoViejo extends Mano(1) {
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(2) (stat)
+  override def efectoPara(heroe: Heroe)(stat: Stat) = cambiarHpEn(2) (stat)
 }
 
 object escudoAntiRobo extends Mano(1) {
@@ -68,24 +67,24 @@ object escudoAntiRobo extends Mano(1) {
     }
   }
 
- override def efectoPara(heroe: Heroe, stat: Stat): Stat = cambiarHpEn(20) (stat)
+ override def efectoPara(heroe: Heroe)(stat: Stat) = cambiarHpEn(20) (stat)
 }
 
 object talismanDedicacion extends Talisman {
     
-  override def efectoPara(heroe :Heroe,stat :Stat) :Stat = {
+  override def efectoPara(heroe :Heroe)(stat :Stat) = {
     val aumentoDe = (0.1 * heroe.statPrincipal.fold(0){_+0}).toInt    //fijarse de agregar algun implicit para convertir esto
     
-    return cambiarTodoEn(aumentoDe)(stat)
+    cambiarTodoEn(aumentoDe)(stat)
   }
 }
 
 object talismanMinimalismo extends Talisman {
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
+  override def efectoPara(heroe: Heroe)(stat: Stat) = {
 
     val vidaPerdida = heroe.inventario.items.length * 10
 
-     return cambiarFuerzaEn(-vidaPerdida)(cambiarInteligenciaEn(-vidaPerdida)(cambiarVelocidadEn(-vidaPerdida)(cambiarHpEn(-vidaPerdida) (stat))))
+    cambiarTodoEn(-vidaPerdida) (stat)
   }
 }  
 
@@ -97,22 +96,22 @@ object vinchaBufalo extends Casco {
     }
   }
 
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-    heroe match { 
-      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) =>  return cambiarInteligenciaEn(30) (stat)
-      case _ => return cambiarFuerzaEn(10)(cambiarInteligenciaEn(10)(cambiarVelocidadEn(10)(cambiarHpEn(10) (stat))))
+  override def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
+    return heroe match { 
+      case _ if (heroe.fuerzaBase > heroe.inteligenciaBase) =>  cambiarInteligenciaEn(30) (stat)
+      case _ => cambiarFuerzaEn(10)(cambiarInteligenciaEn(10)(cambiarVelocidadEn(10)(cambiarHpEn(10) (stat))))
     }
   }
 }
 
 object talismanMaldito extends Talisman() {
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-    return stat.copy(1, 1, 1, 1)
+  override def efectoPara(heroe: Heroe)(stat: Stat) = {
+    Stat()
   }
 }
 
 object espadaDeLaVida extends Mano(1) {
-  override def efectoPara(heroe: Heroe, stat: Stat): Stat = {
-    return stat.copy(fuerza = stat.hp)
+  override def efectoPara(heroe: Heroe)(stat: Stat) = {
+    stat.copy(fuerza = stat.hp)
   }
 }

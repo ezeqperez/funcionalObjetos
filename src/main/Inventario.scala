@@ -3,7 +3,7 @@ package main
 import scala.collection.mutable.ListBuffer
 import main._
 
-case class Inventario(var items: List[Item] = List()){
+case class Inventario(val items: List[Item] = List()){
 
   def crearInventario(lista: List[Item]): Inventario = {
     var inv: Inventario = new Inventario(List())
@@ -15,11 +15,15 @@ case class Inventario(var items: List[Item] = List()){
 
   def equipar(item: Item, heroe: Heroe): Inventario = {
     if (item.puedeEquiparseEn(heroe)) {
-      item.efectoPara(heroe, heroe.stats)
-      return this.crearInventario(agregarItem(item))
+      item.efectoPara(heroe)(heroe.stats)
+      this.crearInventario(agregarItem(item))
     }
-    return this
+    else
+      this
   }
+  
+      //mapea los items a su funcion de efecto, la reduce en un fold de composicion, y la aplica al stat del parametro
+  def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat = items.map(i => i.efectoPara(heroe)_).reduce((x,y) => y compose x)(stat)
 
   def agregarItem(nuevoItem: Item): List[Item] = {
     var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).::(nuevoItem)
