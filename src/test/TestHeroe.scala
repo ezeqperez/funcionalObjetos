@@ -73,8 +73,8 @@ class TestHeroe {
 
   @Test
   def testeoDeObjetos() {
-    assertEquals(Stat(31, 3, 10, 2), cascoVikingo.efectoPara(heroe, statBase))
-    assertEquals(Stat(1, 3, 40, 2), armaduraEleganteSport.efectoPara(heroe, statBase))
-    assertEquals(Stat(1, 3, 10, 32), vinchaBufalo.efectoPara(heroe, statBase))
+    assertEquals(Stat(31, 3, 10, 2), cascoVikingo.efectoPara(heroe)(statBase))
+    assertEquals(Stat(1, 3, 40, 2), armaduraEleganteSport.efectoPara(heroe)(statBase))
+    assertEquals(Stat(1, 3, 10, 32), vinchaBufalo.efectoPara(heroe)(statBase))
   }
 }
