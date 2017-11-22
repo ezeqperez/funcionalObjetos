@@ -49,9 +49,9 @@ case object forzarPuerta extends Tarea{
       
      override def efectoPara(heroe: Heroe)(stat: Stat): Stat = stat
      
-    override def ejecutadaPor(heroe: Heroe): Heroe = {
-      heroe.copy(items = talisman :: heroe.items,tareasRealizadas = heroe.tareasRealizadas.+:(this))
-    }
+     override def ejecutadaPor(heroe: Heroe): Heroe = {
+      heroe.copy(items = talisman :: heroe.items,tareasRealizadas =  heroe.tareasRealizadas.+:(this))
+     }
     
      override def facilidad(eq: Equipo, heroe: Heroe) = {
        eq.lider match {

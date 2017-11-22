@@ -7,22 +7,31 @@ import junit.framework.AssertionFailedError
 
 class TestTarea {
   var heroe : Heroe = null
+  var ladriCompleto : Heroe = null
   var lider : Heroe = null
   var mago : Heroe = null
   var ladri : Heroe = null
   var equipo : Equipo = null
   var integrantes : List[Heroe] = null
+  var integrantesLiderLadron : List[Heroe] = null
   var tareas : List[Tarea] = null
-  var tareas1 : List[Tarea] = null
+  var tarea : Tarea = null
   
   @Before
   def setUp(){
-    tareas = List(pelearContraMonstruo)
+    //heroes
     heroe = Heroe(Stat(10,10,10,10),None,List(),tareas)
+    ladriCompleto = Heroe(Stat(10,10,10,10),Some(Ladron),List(armaduraEleganteSport),tareas)
     ladri = Heroe(Stat(15,15,15,15),Some(Ladron),List(),List())
     mago = Heroe(Stat(15,15,15,15),Some(Mago),List(),List())
     lider = Heroe(Stat(40,10,10,10),Some(Guerrero),List(),List())
+    
     integrantes = List(heroe, lider)
+    tareas = List(pelearContraMonstruo)
+    integrantesLiderLadron = List(ladriCompleto)
+    
+    tarea = robarTalisman(talismanMinimalismo)
+    
     equipo = Equipo ("los power rangers", integrantes, 0)
   }
   
@@ -32,10 +41,16 @@ class TestTarea {
   }
   
   @Test
-  def testRobarTalisman(){
-
+  def testRobarTalismanSeAgregaALaLista(){
+    tareas = tarea :: tareas
+    assertEquals(Heroe(Stat(10,10,10,10),None,List(talismanMinimalismo),tareas), tarea.ejecutadaPor(heroe))
   }
   
+  
+  @Test
+  def testRobarTalismanStats(){ 
+    assertEquals(Stat(1,1,1,1), tarea.ejecutadaPor(heroe)stats)
+  }
   
   @Test
   def testFacilidadConLiderGuerrero(){
@@ -57,9 +72,16 @@ class TestTarea {
   }
   
   @Test
-  def testFacilidadCuatro(){
+  def testFacilidadSinLider(){
      integrantes = ladri :: integrantes
      assert(integrantes.contains(ladri))
      assertEquals(10,forzarPuerta.facilidad(equipo,heroe))
   }
-}
+  
+   @Test
+  def testFacilidadRobarTalisman(){
+
+    assertEquals(50,tarea.facilidad(Equipo ("equipo lider ladron", integrantesLiderLadron, 0),ladriCompleto))
+  
+  }
+} 
