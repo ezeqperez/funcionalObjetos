@@ -3,22 +3,25 @@ package main
 
 trait Tarea extends ModificacionDeStats{
 
-  def facilidad(eq: Equipo, heroe: Heroe) : Int
+  def facilidad(eq: Equipo, heroe: Heroe) : Int = 0
   def ejecutadaPor(heroe: Heroe): Heroe = heroe.copy(tareasRealizadas = heroe.tareasRealizadas.+:(this))
-  def efectoPara(heroe: Heroe)(stat: Stat): Stat
+  def efectoPara(heroe: Heroe)(stat: Stat): Stat = Stat()
 }
 
+class NoPuedeRealizarTarea extends RuntimeException
 
-object pelearContraMonstruo extends Tarea {
+
+
+case object pelearContraMonstruo extends Tarea {
   
-  def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
+  override def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
     if (stat.fuerza < 20)
       cambiarHpEn(-10)(stat)
     else
       stat
   }
   
-  def facilidad(eq: Equipo, heroe: Heroe) = {
+  override def facilidad(eq: Equipo, heroe: Heroe) = {
      eq.lider match{
        case Some(h) if(h.trabajo == Some(Guerrero)) => 20
        case Some(_) => 10
@@ -27,9 +30,9 @@ object pelearContraMonstruo extends Tarea {
   }
 }
   
- object forzarPuerta extends Tarea{
+case object forzarPuerta extends Tarea{
    
-   def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
+   override def efectoPara(heroe: Heroe)(stat: Stat): Stat = {
      heroe.trabajo match{
        case Some(Mago) => stat
        case Some(Ladron) => stat
@@ -40,4 +43,26 @@ object pelearContraMonstruo extends Tarea {
    override def facilidad(eq: Equipo, heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
 }
 
+ case object robarTalisman extends Tarea{
+   
+    private class tareaAuxiliar(talisman : Talisman) extends Tarea {
+      
+     override def efectoPara(heroe: Heroe)(stat: Stat): Stat = stat
+     
+    override def ejecutadaPor(heroe: Heroe): Heroe = {
+      heroe.copy(items = talisman :: heroe.items,tareasRealizadas = heroe.tareasRealizadas.+:(this))
+    }
+    
+     override def facilidad(eq: Equipo, heroe: Heroe) = {
+       eq.lider match {
+         case Some(h) if (h.trabajo == Some(Ladron)) => h.getVelocidad
+         case Some(_) => throw new NoPuedeRealizarTarea
+       }
+     }
+    }
+    
+   def apply(t :Talisman) :Tarea = new tareaAuxiliar(t)
+
+   
+ }
  
