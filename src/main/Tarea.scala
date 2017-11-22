@@ -22,7 +22,7 @@ object pelearContraMonstruo extends Tarea {
      eq.lider match{
        case Some(h) if(h.trabajo == Some(Guerrero)) => 20
        case Some(_) => 10
-       case _ => 0
+       case _ =>  10
      }
   }
 }
@@ -39,5 +39,5 @@ object pelearContraMonstruo extends Tarea {
    
    override def facilidad(eq: Equipo, heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
 }
- 
+
  

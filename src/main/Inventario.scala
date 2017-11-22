@@ -31,7 +31,10 @@ case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
 
       
       //mapea los items a su funcion de efecto, la reduce en un fold de composicion, y la aplica al stat del parametro
-  def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat = items.map(i => i.efectoPara(heroe)_).reduce((x,y) => y compose x)(stat)
+  def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat ={
+    if (items.length == 0) return stat
+    else
+    items.map(i => i.efectoPara(heroe)_).reduce((x,y) => y compose x)(stat)}
 
   def agregarItem(nuevoItem: Item): List[Item] = {
     var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).:+(nuevoItem)
