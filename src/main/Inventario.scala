@@ -9,10 +9,10 @@ object Inventario {
   }
   
   def crearInventario(items:List[Item],heroe:Heroe):Inventario={
-    if(!items.forall(item=> item.puedeEquiparseEn(heroe)) || !sinExtras(items)){
-      return new Inventario(List(),heroe)
-    }
-    return new Inventario(items,heroe)
+    if(!items.forall(item=> item.puedeEquiparseEn(heroe)) || !sinExtras(items))
+      new Inventario(List(),heroe)
+    
+    new Inventario(items,heroe)
   }
   
   def sinExtras(items: List[Item]): Boolean = {
@@ -37,10 +37,19 @@ case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
 
   def agregarItem(nuevoItem: Item): List[Item] = {
     var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).:+(nuevoItem)
+    
     nuevoItem match {
-      case Mano(1) => nuevos.:+(items.find(item => item.sosMiTipo(nuevoItem)).getOrElse(List()))
-      case _  =>
+      case Mano(1) => agregarDescartadoManoUno(nuevoItem, nuevos)
+      case _  => nuevos
     }
-    return nuevos
+  }
+  
+  def agregarDescartadoManoUno(nuevo: Item, nuevosItems: List[Item]) = {
+    var descartado = items.find(item => item.sosMiTipo(nuevo))
+    
+    descartado match {
+      case Some(Mano(1)) => nuevosItems.+:(descartado.get)
+      case _ => nuevosItems
+    }
   }
 }

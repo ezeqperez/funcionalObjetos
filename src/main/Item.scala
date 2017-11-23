@@ -8,7 +8,10 @@ trait Item extends ModificacionDeStats{
   def efectoPara(heroe: Heroe)(stat: Stat): Stat
   
   def sosMiTipo(item: Item): Boolean = {
-    return item.getClass.eq(this.getClass)
+    (item,this) match {
+      case (Mano(_),Mano(_)) => true
+      case _ => item.getClass.eq(this.getClass)
+    }
   }
 }
 
