@@ -5,14 +5,14 @@ import main._
 case class Heroe(statsIniciales: Stat = Stat(), trabajo: Option[Trabajo] = None,
                  items: List[Item] = List(), tareasRealizadas: List[Tarea] = List()) {
 
-  val inventario: Inventario = Inventario(items, this)
+  val inventario = Inventario(items, this)
 
   def cambiarTrabajo(trabajo: Trabajo): Heroe = {
     return this.copy(trabajo = Some(trabajo))
   }
 
   def equipar(item: Item): Heroe = {
-    return this.copy(items = inventario.agregarItem(item))
+    return this.copy(items = inventario.agregarItem(item).items)
 
   }
 

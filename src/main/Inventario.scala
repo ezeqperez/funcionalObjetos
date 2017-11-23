@@ -4,43 +4,27 @@ import scala.collection.mutable.ListBuffer
 import main._
 
 object Inventario {  
-  def apply (items:List[Item]=List(),heroe:Heroe) : Inventario = {
-    return crearInventario(items, heroe)
-  }
-  
-  def crearInventario(items:List[Item],heroe:Heroe):Inventario={
-    if(!items.forall(item=> item.puedeEquiparseEn(heroe)) || !sinExtras(items))
-      new Inventario(List(),heroe)
+  def apply (items: List[Item] = List(), heroe: Heroe) : Inventario = {
+    val inventario = Inventario(List(),heroe)
     
-    new Inventario(items,heroe)
-  }
-  
-  def sinExtras(items: List[Item]): Boolean = {
-      for (i: Item <- items) {
-       i match{
-         case Mano(1) => if(items.count(item => item.sosMiTipo(i)) > 2 || items.exists(item => item.sosMiTipo(espadaDeLaVida))){return false}  //FIXME es Mano(2) en vez de espadaDeLaVida
-         case Mano(2) => if(items.count(item => item.sosMiTipo(i)) != 1 || items.exists(item => item.sosMiTipo(escudoAntiRobo))){return false} //FIXME es Mano(1) en vez de escudoAntiRobo
-         case _ => if(items.count(item => item.sosMiTipo(i)) != 1) {return false}
-       }
-      }
-      return true
-    }
+    return items.filter(_.puedeEquiparseEn(heroe)).foldLeft(inventario)((s: Inventario,item: Item) => s.agregarItem(item))
+   }
 }
 
 case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
 
       
-      //mapea los items a su funcion de efecto, la reduce en un fold de composicion, y la aplica al stat del parametro
+      //mapea los items a su funcion de efecto, la reduce en un fold, y la aplica al stat del parametro
   def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat ={
     items.map(i => i.efectoPara(heroe)_).foldLeft(stat)((semilla: Stat,f: Stat => Stat) => f(semilla))
   }
 
-  def agregarItem(nuevoItem: Item): List[Item] = {
+  def agregarItem(nuevoItem: Item): Inventario = {
     var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).:+(nuevoItem)
     
     nuevoItem match {
-      case Mano(1) => agregarDescartadoManoUno(nuevoItem, nuevos)
-      case _  => nuevos
+      case Mano(1) => this.copy(items = agregarDescartadoManoUno(nuevoItem, nuevos))
+      case _  => this
     }
   }
   
