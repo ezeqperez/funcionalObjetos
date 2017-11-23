@@ -26,7 +26,7 @@ class TestInventario {
 
   @Test
   def testeoDeInventario() {
-    assertEquals(List(), heroe.inventario.items)
+    assertEquals(listaItems, heroe.inventario.items)
   }
 
   @Test
