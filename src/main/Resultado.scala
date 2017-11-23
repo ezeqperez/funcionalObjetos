@@ -1,7 +1,9 @@
 package main
 
 sealed trait Resultado { 
-  def equipo: Equipo 
+  def equipo: Equipo
+  
+  def tareaFallida: Option[Tarea] = None
 }
 
 object Resultado {
@@ -12,6 +14,8 @@ object Resultado {
       case error: NoPuedeRealizarTarea => Fallo(equipo, error.tarea)
     }
 }
-
-case class Exito(equipo: Equipo) extends Resultado
-case class Fallo(equipo: Equipo, tareaFallida: Tarea) extends Resultado
+      //constructor privado, asi no instancio directamente estas clases, y obligo a usar Resultado(Equipo)
+case class Exito private(equipo: Equipo) extends Resultado
+case class Fallo private(equipo: Equipo, tarea: Tarea) extends Resultado {
+  override def tareaFallida = Some(tarea)
+}

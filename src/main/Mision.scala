@@ -6,8 +6,12 @@ abstract case class Mision(tareas: List[Tarea] = List()) {
 
   def recompensa: (Equipo => Equipo)
   
-  def serRealizadaPor(unEquipo: Equipo): Resultado = {
-    return tareas.foldLeft(Resultado(unEquipo)){
+  def serRealizadaPor(equipo: Equipo) = {
+    queHagaLasTareasUn(equipo)
+  }
+  
+  private def queHagaLasTareasUn(equipo: Equipo): Resultado = {
+    return tareas.foldLeft(Resultado(equipo)){
       
       case (Exito(equipo), tarea: Tarea)         => equipo.hacer(tarea)
       case (estado: Fallo, _)                    => estado
