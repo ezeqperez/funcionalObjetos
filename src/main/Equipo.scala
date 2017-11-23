@@ -35,6 +35,13 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), va
 
     integrantes.filterNot(_.trabajo.isEmpty).map(_.trabajo.get).count(_ == trabajo)
   }
+  
+  def hacer(tarea: Tarea) = tarea.ejecutadaPor(this)(mejorHeroePara(tarea))
+  
+  
+  private def mejorHeroePara (unaTarea: Tarea) = {
+    mejorHeroeSegun(unaTarea.facilidad(this))
+  }
 
   private def losQueTrabajan(lista: List[Heroe]) = {
     lista.filterNot(_.statPrincipal.isEmpty)

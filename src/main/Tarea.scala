@@ -3,12 +3,12 @@ package main
 
 trait Tarea extends ModificacionDeStats{
 
-  def facilidad(eq: Equipo, heroe: Heroe) : Int = 0
-  def ejecutadaPor(heroe: Heroe): Heroe = heroe.copy(tareasRealizadas = heroe.tareasRealizadas.+:(this))
+  def facilidad(eq: Equipo)(heroe: Heroe) : Int = 0
+  def ejecutadaPor(equipo: Equipo)(heroe: Heroe) = equipo.reemplazarMiembro(heroe, heroe.copy(tareasRealizadas = heroe.tareasRealizadas.+:(this)))
   def efectoPara(heroe: Heroe)(stat: Stat): Stat = Stat()
 }
 
-class NoPuedeRealizarTarea extends RuntimeException
+class NoPuedeRealizarTarea(val tarea: Tarea) extends RuntimeException
 
 
 
@@ -21,7 +21,7 @@ case object pelearContraMonstruo extends Tarea {
       stat
   }
   
-  override def facilidad(eq: Equipo, heroe: Heroe) = {
+  override def facilidad(eq: Equipo)(heroe: Heroe) = {
      eq.lider match{
        case Some(h) if(h.trabajo == Some(Guerrero)) => 20
        case Some(_) => 10
@@ -40,7 +40,7 @@ case object forzarPuerta extends Tarea{
      }
    }
    
-   override def facilidad(eq: Equipo, heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
+   override def facilidad(eq: Equipo)(heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10  
 }
 
  case object robarTalisman extends Tarea{
@@ -49,14 +49,15 @@ case object forzarPuerta extends Tarea{
       
      override def efectoPara(heroe: Heroe)(stat: Stat): Stat = stat
      
-     override def ejecutadaPor(heroe: Heroe): Heroe = {
-      heroe.copy(items = talisman :: heroe.items,tareasRealizadas =  heroe.tareasRealizadas.+:(this))
+     override def ejecutadaPor(equipo: Equipo)(heroe: Heroe) = {
+      equipo.reemplazarMiembro(heroe, heroe.copy(items = talisman :: heroe.items,tareasRealizadas =  heroe.tareasRealizadas.+:(this)))
+       
      }
     
-     override def facilidad(eq: Equipo, heroe: Heroe) = {
+     override def facilidad(eq: Equipo)(heroe: Heroe) = {
        eq.lider match {
          case Some(h) if (h.trabajo == Some(Ladron)) => h.getVelocidad
-         case _ => throw new NoPuedeRealizarTarea
+         case _ => throw new NoPuedeRealizarTarea(this)
        }
      }
     }

@@ -50,23 +50,19 @@ class TestHeroe {
     assertEquals(1, mago.getHp)
     assertEquals(22, mago.getInteligencia)
     assertEquals(10, mago.getVelocidad)
-    assertEquals(Option(Mago), mago.trabajo)
+    assertEquals(Some(Mago), mago.trabajo)
   }
 
   @Test
   def trabajoGuerrero() {
     val guerrero: Heroe = heroe.cambiarTrabajo(Guerrero)
-    assertEquals(18, guerrero.getFuerza)
-    assertEquals(11, guerrero.getHp)
-    assertEquals(1, guerrero.getInteligencia)
-    assertEquals(10, guerrero.getVelocidad)
-    assertEquals(Option(Guerrero), guerrero.trabajo)
+    assertEquals(Stat(11,18,10,1), guerrero.stats)
+    assertEquals(Some(Guerrero), guerrero.trabajo)
   }
 
   @Test
   def equiparItem() {
     val heroeEquipado : Heroe = heroe.equipar(espadaDeLaVida)
-    //assertEquals(heroeEquipado.getFuerza, heroeEquipado.getHp)
     assertEquals(true, heroeEquipado.inventario.items.contains(espadaDeLaVida))
     assertEquals(1, heroeEquipado.inventario.items.length)
   }

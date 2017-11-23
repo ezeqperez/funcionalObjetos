@@ -40,13 +40,8 @@ class TestInventario {
   def espadaDescartadaSeAgregaDeNuevo() {
     val inv = Inventario(listaItemsBuena.+:(espadaDeLaVida),new Heroe())
     
-    assertEquals(List(escudoAntiRobo,cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
-        talismanMinimalismo),inv.agregarItem(escudoAntiRobo))
-  }
-  
-  @Test
-  def asdasd() {
-    assert(cascoVikingo.sosMiTipo(cascoVikingo))
+    assertEquals(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
+        talismanMinimalismo,escudoAntiRobo),inv.agregarItem(escudoAntiRobo))
   }
   
   
