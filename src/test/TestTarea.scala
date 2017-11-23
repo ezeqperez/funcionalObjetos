@@ -19,7 +19,8 @@ class TestTarea {
 
   @Before
   def setUp() {
-
+    tareas = List(pelearContraMonstruo)
+    
     heroe = Heroe(Stat(10, 10, 10, 10), None, List(), tareas)
     ladriCompleto = Heroe(Stat(10, 10, 10, 10), Some(Ladron), List(armaduraEleganteSport), tareas)
     ladri = Heroe(Stat(15, 15, 15, 15), Some(Ladron), List(), List())
@@ -41,14 +42,10 @@ class TestTarea {
   }
 
   @Test
-  def testRobarTalismanSeAgregaALaLista() {
-    tareas = tarea :: tareas
-    assertEquals(Heroe(Stat(10, 10, 10, 10), None, List(talismanMinimalismo), tareas), tarea.ejecutadaPor(equipo)(heroe))
-  }
-
-  @Test
-  def testRobarTalismanStats() {
-    assertEquals(Stat(1, 1, 1, 1), tarea.ejecutadaPor(equipo)(heroe))
+  def testReemplazarMiembroConTareaAgregada() {
+    val heroeNuevo = Heroe(Stat(10, 10, 10, 10), None, List(talismanMinimalismo), List(tarea,pelearContraMonstruo))
+    val equipoResultado = Equipo("los power rangers", List(heroeNuevo,lider), 0)
+    assertEquals(equipoResultado, tarea.ejecutadaPor(equipo)(heroe))
   }
 
   @Test
