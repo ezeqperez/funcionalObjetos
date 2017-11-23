@@ -4,6 +4,20 @@ sealed trait Resultado {
   def equipo: Equipo
   
   def tareaFallida: Option[Tarea] = None
+  
+  def map(f: (Equipo => Equipo)) = {
+    this match {
+      case Exito(equipo)      => Resultado(f(equipo))
+      case yo @ Fallo(_,_)    => yo
+    }
+  }
+  
+  def isSuccess = {
+    this match {
+      case Exito(_)   => true
+      case _          => false
+    }
+  }
 }
 
 object Resultado {
