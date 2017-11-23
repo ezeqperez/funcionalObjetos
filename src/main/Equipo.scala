@@ -36,7 +36,7 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), va
     integrantes.filterNot(_.trabajo.isEmpty).map(_.trabajo.get).count(_ == trabajo)
   }
   
-  def hacer(tarea: Tarea) = tarea.ejecutadaPor(this)(mejorHeroePara(tarea))
+  def hacer(tarea: Tarea) = Resultado(tarea.ejecutadaPor(this)(mejorHeroePara(tarea)))  //lo encierro en nuestra propia monada
   
   
   private def mejorHeroePara (unaTarea: Tarea) = {
