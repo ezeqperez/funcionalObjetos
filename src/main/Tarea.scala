@@ -4,7 +4,7 @@ trait Tarea extends ModificacionDeStats {
 
   def facilidad(eq: Equipo)(heroe: Heroe): Int = 0
   def ejecutadaPor(equipo: Equipo)(heroe: Heroe) = equipo.reemplazarMiembro(heroe, heroe.copy(tareasRealizadas = heroe.tareasRealizadas.+:(this)))
-  def efectoPara(heroe: Heroe)(stat: Stat): Stat = Stat()
+  def efectoPara(heroe: Heroe)(stat: Stat): Stat 
 }
 
 class NoPuedeRealizarTarea(val tarea: Tarea) extends RuntimeException
@@ -40,15 +40,13 @@ case object forzarPuerta extends Tarea {
   override def facilidad(eq: Equipo)(heroe: Heroe) = heroe.getInteligencia + eq.cantidadDe(Ladron) * 10
 }
 
-case object robarTalisman extends Tarea {
-
-  private class tareaAuxiliar(talisman: Talisman) extends Tarea {
+case class robarTalisman(talisman: Talisman) extends Tarea {
 
     override def efectoPara(heroe: Heroe)(stat: Stat): Stat = stat
 
     override def ejecutadaPor(equipo: Equipo)(heroe: Heroe) = {
-      equipo.reemplazarMiembro(heroe, heroe.copy(items = talisman :: heroe.items, tareasRealizadas = heroe.tareasRealizadas.+:(this)))
-
+      super.ejecutadaPor(equipo)(heroe)
+      equipo.reemplazarMiembro(heroe, heroe.copy(items = heroe.items.+:(talisman)))
     }
 
     override def facilidad(eq: Equipo)(heroe: Heroe) = {
@@ -57,9 +55,6 @@ case object robarTalisman extends Tarea {
         case _                                      => throw new NoPuedeRealizarTarea(this)
       }
     }
-  }
-
-  def apply(t: Talisman): Tarea = new tareaAuxiliar(t)
-
+  
 }
  
