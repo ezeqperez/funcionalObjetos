@@ -20,7 +20,7 @@ class TestEquipo {
 
   @Before
   def setUp() {
-    heroeBueno = new Heroe(statsBuenos, Some(Ladron), inventario.items)
+    heroeBueno = new Heroe(statsBuenos, Some(Ladron), inventario.items,List())
     equipo = new Equipo(integrantes = List(heroeBueno, heroeMalo))
   }
 

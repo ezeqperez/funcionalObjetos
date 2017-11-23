@@ -6,8 +6,9 @@ case class Heroe(statsIniciales: Stat = Stat(), trabajo: Option[Trabajo] = None,
     items:List[Item]= List() , tareasRealizadas: List[Tarea] = List()) {
   
   val inventario: Inventario = Inventario(items,this)
+  
   def cambiarTrabajo(trabajo: Trabajo): Heroe = {
-    return this.copy(trabajo = Option(trabajo))
+    return this.copy(trabajo = Some(trabajo))
   }
 
   def equipar(item: Item): Heroe = {
@@ -24,7 +25,7 @@ case class Heroe(statsIniciales: Stat = Stat(), trabajo: Option[Trabajo] = None,
  
   private def statsItemsYTrabajo = inventario.listoParaEquiparEn(this)(conTrabajo)
   
-  private def aplicarTareasA = tareasRealizadas.map(t => t.efectoPara(this)_).reduce((x,y) => y compose x)
+  private def aplicarTareasA(stat: Stat) = tareasRealizadas.map(t => t.efectoPara(this)_).foldLeft(stat)((semilla: Stat,f: Stat => Stat) => f(semilla))
   
   
   def fuerzaBase = statsIniciales.fuerza

@@ -56,7 +56,7 @@ case object forzarPuerta extends Tarea{
      override def facilidad(eq: Equipo, heroe: Heroe) = {
        eq.lider match {
          case Some(h) if (h.trabajo == Some(Ladron)) => h.getVelocidad
-         case Some(_) => throw new NoPuedeRealizarTarea
+         case _ => throw new NoPuedeRealizarTarea
        }
      }
     }
