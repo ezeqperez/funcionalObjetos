@@ -12,6 +12,7 @@ class TestInventario {
     var heroeBueno : Heroe = null
     var listaItems : List[Item] = null
     var listaItemsBuena : List[Item] = null
+    var listaItemsDosManos : List[Item] = null
     
   @Before
   def setUp() {
@@ -21,6 +22,8 @@ class TestInventario {
     
     listaItemsBuena = List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
         talismanMinimalismo)
+    listaItemsDosManos = List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
+        talismanMinimalismo,espadaDeLaVida)
     heroeBueno = new Heroe(Stat(10,10,10,10),None,listaItemsBuena,List())
   }
 
@@ -44,5 +47,28 @@ class TestInventario {
     val miLista = listaItemsBuena.+:(escudoAntiRobo)
     
     assert(inv.agregarItem(escudoAntiRobo).items.forall(miLista.contains(_)))
+  }
+  
+  
+  @Test
+  def inventarioConDosElementosDosManos() {
+    val inv = Inventario(listaItemsDosManos.++(List(espadaDeLaVida)),new Heroe())
+    
+    assertEquals(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
+        talismanMinimalismo,espadaDeLaVida),inv.items)
+  }
+  
+   @Test
+  def agregarManosDoblesAInventarioYaTeniendoDobles() {
+    val inv = Inventario(listaItemsDosManos,new Heroe())
+    
+    assertEquals(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
+        talismanMinimalismo,espadaDeLaVida),inv.agregarItem(espadaDeLaVida))
+  }
+  
+    @Test
+  def pruebaSosMiTipo() {
+    
+    assertEquals(true,espadaDeLaVida.sosMiTipo(espadaDeLaVida))
   }
 }
