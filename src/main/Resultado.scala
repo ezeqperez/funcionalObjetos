@@ -7,8 +7,8 @@ sealed trait Resultado {
   
   def map(f: (Equipo => Equipo)) = {
     this match {
-      case Exito(equipo)      => Resultado(f(equipo))
-      case yo @ Fallo(_,_)    => yo
+      case Exito(equipo)         => Resultado(f(equipo))
+      case error @ Fallo(_,_)    => error
     }
   }
   
@@ -16,6 +16,13 @@ sealed trait Resultado {
     this match {
       case Exito(_)   => true
       case _          => false
+    }
+  }
+  
+  def get = {
+    this match {
+      case Exito(equipo)  => equipo
+      case _              => throw new Exception("Get de Resultado Fallido")
     }
   }
 }

@@ -1,20 +1,22 @@
 package main
 
-import scala.util.Try
+case class Mision(tareas: List[Tarea] = List()) {
 
-abstract case class Mision(tareas: List[Tarea] = List()) {
-
-  def recompensa: (Equipo => Equipo)
+  def recompensa: (Equipo => Equipo) = null
   
-  def serRealizadaPor(equipo: Equipo) = {
+  def serRealizadaPor(equipo: Resultado) = {
     queHagaLasTareasUn(equipo).map(recompensa)
   }
   
-  private def queHagaLasTareasUn(equipo: Equipo): Resultado = {
-    return tareas.foldLeft(Resultado(equipo)){
+  private def queHagaLasTareasUn(unEquipo: Resultado): Resultado = {
+    return tareas.foldLeft(unEquipo){
       
-      case (Exito(equipo), tarea: Tarea)  => equipo.hacer(tarea)
+      case (Exito(eq), tarea: Tarea)  => eq.hacer(tarea)
       case (estado: Fallo, _)             => estado
     }
   }
+}
+
+object pegarleAlColo extends Mision(List(pelearContraMonstruo)) {
+  def recompensa(equipo: Equipo) = equipo.cobrarOro(10)
 }

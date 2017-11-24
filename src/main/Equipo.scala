@@ -1,6 +1,6 @@
 package main
 
-case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), var pozo: Int = 0) {
+case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), pozo: Int = 0) {
 
   def mejorHeroeSegun(criterio: (Heroe => Int)): Heroe = {
     integrantes.maxBy(criterio)
@@ -30,6 +30,8 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), va
     else
       Some(mejorHeroeSegun { valorStatPrincipalDe })
   }
+  
+  def cobrarOro(oro: Int) = this.copy(pozo = pozo + oro)
 
   def cantidadDe(trabajo: Trabajo) = {
 
