@@ -22,7 +22,7 @@ abstract case class Torso() extends Item
 abstract case class Mano(manosNecesarias: Int) extends Item
 abstract case class Talisman() extends Item
 
-object cascoVikingo extends Casco() {
+object cascoVikingo extends Casco {
   
   override def efectoPara(heroe: Heroe)(stat: Stat)= cambiarHpEn(30)(stat)
 }
@@ -47,7 +47,7 @@ object palitoMagico extends Mano(1) {
   override def efectoPara(heroe: Heroe)(stat: Stat) = cambiarInteligenciaEn(20) (stat)
 }
 
-object armaduraEleganteSport extends Torso() {
+object armaduraEleganteSport extends Torso {
   
   def efectoPara(heroe: Heroe)(stat: Stat) = (cambiarHpEn(-30)_ compose cambiarVelocidadEn(30)_) (stat)
 }
@@ -109,7 +109,7 @@ object vinchaBufalo extends Casco {
   }
 }
 
-object talismanMaldito extends Talisman() {
+object talismanMaldito extends Talisman {
   override def efectoPara(heroe: Heroe)(stat: Stat) = {
     Stat()
   }

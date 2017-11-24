@@ -5,27 +5,15 @@ import main._
 object Inventario {  
   
   def apply (items: List[Item] = List(), heroe: Heroe = new Heroe) : Inventario = {
-    new Inventario(setearListaDe(items, heroe),heroe)
-  }
-  
-  private def setearListaDe(items: List[Item], heroe: Heroe) = {
-    List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
-        talismanMinimalismo)
-    
     val inv = new Inventario(items,heroe)
     val listaVacia: List[Item] = List()
     
-    items.filter(_.puedeEquiparseEn(heroe)).foldLeft(listaVacia)((_,item) => inv.nuevaListaDeItemsCon(item))
+    items.filter(_.puedeEquiparseEn(heroe)).foldLeft(inv)((s,item) => s.agregarItem(item))
   }
 }
 
 case class Inventario private(items: List[Item] = List(), heroe: Heroe){
 
-  def copy(items: List[Item] = this.items, heroe: Heroe = this.heroe): Inventario = {
-    Inventario(items,heroe)
-  }
-   
-        //mapea los items a su funcion de efecto, la reduce en un fold, y la aplica al stat del parametro
   def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat ={
     items.foldLeft(stat)((semilla: Stat,f: Item) => f.efectoPara(heroe)(semilla))
   }
