@@ -63,12 +63,7 @@ class TestInventario {
     val inv = Inventario(listaItemsDosManos,new Heroe())
     
     assertEquals(List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
-        talismanMinimalismo,espadaDeLaVida),inv.agregarItem(espadaDeLaVida))
+        talismanMinimalismo,espadaDeLaVida),inv.agregarItem(espadaDeLaVida).items)
   }
   
-    @Test
-  def pruebaSosMiTipo() {
-    
-    assertEquals(true,espadaDeLaVida.sosMiTipo(espadaDeLaVida))
-  }
 }
