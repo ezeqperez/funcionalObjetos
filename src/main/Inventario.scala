@@ -1,39 +1,56 @@
 package main
 
-import scala.collection.mutable.ListBuffer
 import main._
 
 object Inventario {  
-  def apply (items: List[Item] = List(), heroe: Heroe) : Inventario = {
-    val inventario = Inventario(List(),heroe)
+  
+  def apply (items: List[Item] = List(), heroe: Heroe = new Heroe) : Inventario = {
+    new Inventario(setearListaDe(items, heroe),heroe)
+  }
+  
+  private def setearListaDe(items: List[Item], heroe: Heroe) = {
+    List(cascoVikingo,armaduraEleganteSport,talismanDedicacion,talismanMaldito,
+        talismanMinimalismo)
     
-    return items.filter(_.puedeEquiparseEn(heroe)).foldLeft(inventario)((s: Inventario,item: Item) => s.agregarItem(item))
-   }
+    val inv = new Inventario(items,heroe)
+    val listaVacia: List[Item] = List()
+    
+    items.filter(_.puedeEquiparseEn(heroe)).foldLeft(listaVacia)((_,item) => inv.nuevaListaDeItemsCon(item))
+  }
 }
 
-case class Inventario private(val items: List[Item] = List(), val heroe: Heroe){
+case class Inventario private(items: List[Item] = List(), heroe: Heroe){
 
-      
-      //mapea los items a su funcion de efecto, la reduce en un fold, y la aplica al stat del parametro
+  def copy(items: List[Item] = this.items, heroe: Heroe = this.heroe): Inventario = {
+    Inventario(items,heroe)
+  }
+   
+        //mapea los items a su funcion de efecto, la reduce en un fold, y la aplica al stat del parametro
   def listoParaEquiparEn(heroe: Heroe)(stat: Stat) : Stat ={
-    items.map(i => i.efectoPara(heroe)_).foldLeft(stat)((semilla: Stat,f: Stat => Stat) => f(semilla))
+    items.foldLeft(stat)((semilla: Stat,f: Item) => f.efectoPara(heroe)(semilla))
   }
 
   def agregarItem(nuevoItem: Item): Inventario = {
-    var nuevos = items.filterNot(item => item.sosMiTipo(nuevoItem)).:+(nuevoItem)
+    this.copy(nuevaListaDeItemsCon(nuevoItem))
+  }
+  
+  private def nuevaListaDeItemsCon(nuevoItem: Item) = {
+    var nuevos = descartarLosDelTipoDe(nuevoItem)
     
     nuevoItem match {
-      case Mano(1) => this.copy(items = agregarDescartadoManoUno(nuevoItem, nuevos))
-      case _  => this
+      case Mano(1) => agregarDescartadoManoUno(nuevoItem, nuevos)
+      case _  => nuevos
     }
   }
   
-  def agregarDescartadoManoUno(nuevo: Item, nuevosItems: List[Item]) = {
-    var descartado = items.find(item => item.sosMiTipo(nuevo))
+  private def agregarDescartadoManoUno(nuevo: Item, nuevosItems: List[Item]) = {
+    var descartado = items.find(_.sosMiTipo(nuevo))
     
     descartado match {
       case Some(Mano(1)) => nuevosItems.+:(descartado.get)
       case _ => nuevosItems
     }
   }
+  
+  private def descartarLosDelTipoDe(item: Item) = items.filterNot(_.sosMiTipo(item)).:+(item)
 }

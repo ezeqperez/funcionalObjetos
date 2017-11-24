@@ -45,8 +45,7 @@ case class robarTalisman(talisman: Talisman) extends Tarea {
     override def efectoPara(heroe: Heroe)(stat: Stat): Stat = stat
 
     override def ejecutadaPor(equipo: Equipo)(heroe: Heroe) = {
-      super.ejecutadaPor(equipo)(heroe)
-      equipo.reemplazarMiembro(heroe, heroe.copy(items = heroe.items.+:(talisman)))
+      equipo.reemplazarMiembro(heroe, heroe.copy(items = heroe.items.+:(talisman), tareasRealizadas = heroe.tareasRealizadas.+:(this)))
     }
 
     override def facilidad(eq: Equipo)(heroe: Heroe) = {

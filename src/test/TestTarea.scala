@@ -31,7 +31,7 @@ class TestTarea {
     tareas = List(pelearContraMonstruo)
     integrantesLiderLadron = List(ladriCompleto)
 
-    tarea = robarTalisman(talismanMinimalismo)
+    tarea = new robarTalisman(talismanMinimalismo)
 
     equipo = Equipo("los power rangers", integrantes, 0)
   }
@@ -57,14 +57,14 @@ class TestTarea {
   def testFacilidadConLiderMago() {
     integrantes = mago :: integrantes
     assert(integrantes.contains(mago))
-    assertEquals(10, pelearContraMonstruo.facilidad(Equipo("equipo auxiliar con mago", integrantes, 0))(heroe))
+    assertEquals(10, pelearContraMonstruo.facilidad(Equipo("equipo auxiliar con mago", integrantes))(heroe))
   }
 
   @Test
   def testFacilidadConLadron() {
     integrantes = ladri :: integrantes
     assert(integrantes.contains(ladri))
-    assertEquals(20, forzarPuerta.facilidad(Equipo("equipo auxiliar con ladron", integrantes, 0))(heroe))
+    assertEquals(20, forzarPuerta.facilidad(Equipo("equipo auxiliar con ladron", integrantes))(heroe))
   }
 
   @Test
@@ -76,8 +76,9 @@ class TestTarea {
 
   @Test
   def testFacilidadRobarTalisman() {
-
-    assertEquals(50, tarea.facilidad(Equipo("equipo lider ladron", integrantesLiderLadron, 0))(ladriCompleto))
+    val equipo = Equipo("equipo lider ladron", integrantesLiderLadron)
+    
+    assertEquals(50, tarea.facilidad(equipo)(ladriCompleto))
 
   }
 } 

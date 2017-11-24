@@ -10,7 +10,7 @@ trait Item extends ModificacionDeStats{
   def sosMiTipo(item: Item): Boolean = {
     (item,this) match {
       case (Mano(_),Mano(_)) => true
-      case _ => item.getClass.eq(this.getClass)
+      case (_,_) => item.getClass.equals(this.getClass)
     }
   }
 }
