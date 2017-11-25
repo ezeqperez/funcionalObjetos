@@ -1,5 +1,7 @@
 package main
 
+import scala.util.Try
+
 case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), pozo: Int = 0) {
 
   def mejorHeroeSegun(criterio: (Heroe => Int)): Heroe = {
@@ -38,11 +40,14 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), po
     integrantes.filterNot(_.trabajo.isEmpty).map(_.trabajo.get).count(_ == trabajo)
   }
   
-  def hacer(tarea: Tarea) = Resultado(tarea.ejecutadaPor(this)(mejorHeroePara(tarea)))  //lo encierro en nuestra propia monada
-  
+  def hacer(tarea: Tarea) = {
+    val posibleHeroe = mejorHeroePara(tarea)
+    
+    posibleHeroe.fold(_ => Fallo(this,tarea), h => Resultado(tarea.ejecutadaPor(this)(h)))
+  }
   
   private def mejorHeroePara (unaTarea: Tarea) = {
-    mejorHeroeSegun(unaTarea.facilidad(this))
+    Try(mejorHeroeSegun(unaTarea.facilidad(this)))
   }
 
   private def losQueTrabajan(lista: List[Heroe]) = {

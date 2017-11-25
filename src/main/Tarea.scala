@@ -7,7 +7,7 @@ trait Tarea extends ModificacionDeStats {
   def efectoPara(heroe: Heroe)(stat: Stat): Stat 
 }
 
-class NoPuedeRealizarTarea(val tarea: Tarea) extends RuntimeException
+class NoPuedeRealizarTarea(val tarea: Tarea) extends Exception
 
 case object pelearContraMonstruo extends Tarea {
 
