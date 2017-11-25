@@ -1,7 +1,7 @@
 package main
 
 trait Item extends ModificacionDeStats{
-  val precio = 0
+  def precio = 10
 
   def puedeEquiparseEn(heroe: Heroe): Boolean = true
   

@@ -5,25 +5,18 @@ case object Taberna {
   type Criterio = (Equipo,Equipo) => Boolean
   
   def elegirMejorMisionPara(equipo: Equipo)(criterio: Criterio) = {
-    ordenarMisionesSegun(Resultado(equipo))(criterio).head
+    var mejorEstado = Resultado(misiones.map(_.serRealizadaPor(Resultado(equipo))).filter(_.isSuccess).map(_.get).sortWith((e1,e2) => criterio(e1,e2)).head)
+    
+    misiones.find(_.serRealizadaPor(Resultado(equipo)) == mejorEstado)
   }
-
-  
-  private def ordenarMisionesSegun(equipo: Resultado)(criterio: Criterio) = {
-    misiones.sortWith((m1: Mision, m2: Mision) => criterio(m1.serRealizadaPor(equipo).get, m2.serRealizadaPor(equipo).get))
-  }
-        //FIXME esto es feo, hay que pensar una mejor manera
   
 }
 
-object criterioMayorOro {
-  def apply(equipo: Equipo, otroEquipo: Equipo) = {
-    equipo.pozo > otroEquipo.pozo
-  }
-}
-
-object masHeroes {
-  def apply(equipo: Equipo, otroEquipo: Equipo) = {
-    equipo.integrantes.size > otroEquipo.integrantes.size
-  }
+object CriteriosDeMision{
+  type Criterio = (Equipo,Equipo) => Boolean
+  
+  val porMasOro = (equipo: Equipo, otroEquipo: Equipo) => equipo.pozo > otroEquipo.pozo
+  
+  val porMasHeroes = (equipo: Equipo, otroEquipo: Equipo) => equipo.integrantes.size > otroEquipo.integrantes.size
+  
 }

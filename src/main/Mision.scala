@@ -12,11 +12,15 @@ case class Mision(tareas: List[Tarea] = List()) {
     return tareas.foldLeft(unEquipo){
       
       case (Exito(eq), tarea: Tarea)  => eq.hacer(tarea)
-      case (estado: Fallo, _)             => estado
+      case (estado: Resultado, _)     => estado
     }
   }
 }
 
 object pegarleAlColo extends Mision(List(pelearContraMonstruo)) {
   def recompensa(equipo: Equipo) = equipo.cobrarOro(10)
+}
+
+object robarCosas extends Mision(List(new robarTalisman(talismanDedicacion))) {
+  def recompensa(equipo: Equipo) = equipo.cobrarOro(1000)
 }

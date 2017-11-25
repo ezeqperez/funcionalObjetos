@@ -1,5 +1,7 @@
 package main
 
+import java.util.NoSuchElementException
+
 sealed trait Resultado { 
   def equipo: Equipo
   
@@ -7,8 +9,9 @@ sealed trait Resultado {
   
   def map(f: (Equipo => Equipo)) = {
     this match {
-      case Exito(equipo)         => Resultado(f(equipo))
-      case error @ Fallo(_,_)    => error
+      case Exito(equipo)               => Resultado(f(equipo))
+      case error @ Fallo(_,_)          => error
+      case error @ FalloGeneral(_,_)   => error
     }
   }
   
@@ -25,6 +28,7 @@ sealed trait Resultado {
       case _              => throw new Exception("Get de Resultado Fallido")
     }
   }
+  
 }
 
 object Resultado {
@@ -33,6 +37,7 @@ object Resultado {
       Exito(equipo)
     } catch {
       case error: NoPuedeRealizarTarea => Fallo(equipo, error.tarea)
+      case _: NoSuchElementException => FalloGeneral(equipo, throw new Exception("Get de Resultado Fallido"))
     }
 }
       //constructor privado, asi no instancio directamente estas clases, y obligo a usar Resultado(Equipo)
@@ -40,3 +45,4 @@ case class Exito private(equipo: Equipo) extends Resultado
 case class Fallo private(equipo: Equipo, tarea: Tarea) extends Resultado {
   override def tareaFallida = Some(tarea)
 }
+case class FalloGeneral private(equipo: Equipo, excepcion: Exception) extends Resultado
