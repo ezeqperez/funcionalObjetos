@@ -19,6 +19,7 @@ class TestTaberna{
   val tabernaAbrePuertas = new Taberna(List(abrirPuerta))
   val tabernaColoPt = new Taberna(List(pegarleAlColo))
   val tabernaRobarTalisman = new Taberna(List(robarCosas))
+  val tabernaPruebaEntrenar = new Taberna(List(pegarleAlColo,abrirPuerta))
 
   @Before
   def setUp() {
@@ -31,7 +32,17 @@ class TestTaberna{
   
   @Test
   def noHayMisionSiFalla() {
-    assertEquals(None, tabernaRobarTalisman.elegirMejorMisionPara(equipo)(porMasOro))
+    assertEquals(None, tabernaRobarTalisman.elegirMejorMisionPara(equipo,porMasOro)(tabernaRobarTalisman.misiones))
   }
   
+  @Test
+  def guerreroEntrenaYSeModificaEquipo() {
+    assertEquals(equipo, tabernaPruebaEntrenar.entrenar(porMasOro, equipo)) //arreglar el equipo
+  }
+   
+  @Test
+  def guerreroEntrenandoNoPuedeRobarTalisman() {
+    assertEquals(equipo, tabernaRobarTalisman.entrenar(porMasOro, equipo))
+  }
+   
 }
