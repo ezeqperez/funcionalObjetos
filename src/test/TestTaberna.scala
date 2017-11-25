@@ -27,12 +27,12 @@ class TestTaberna{
   
   @Test
   def eligeBienMisionSimple() {
-    //assertEquals(tabernaAbrePuertas.elegirMejorMisionPara(equipo)(porMasOro), Some(abrirPuerta))
+    assertEquals(tabernaAbrePuertas.elegirMision(equipo,porMasOro), Some(abrirPuerta))
   }
   
   @Test
   def noHayMisionSiFalla() {
-    assertEquals(None, tabernaRobarTalisman.elegirMejorMisionPara(equipo,porMasOro)(tabernaRobarTalisman.misiones))
+    assertEquals(None, tabernaRobarTalisman.elegirMision(equipo,porMasOro))
   }
   
   @Test
