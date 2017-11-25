@@ -1,15 +1,19 @@
 package main
 
-case object Taberna {
-  val misiones: List[Mision] = List(pegarleAlColo)
-  type Criterio = (Equipo,Equipo) => Boolean
+case class Taberna(misiones: List[Mision] = List(abrirPuerta)) {
+  import main.CriteriosDeMision._
   
   def elegirMejorMisionPara(equipo: Equipo)(criterio: Criterio) = {
-    var mejorEstado = Resultado(misiones.map(_.serRealizadaPor(Resultado(equipo))).filter(_.isSuccess).map(_.get).sortWith((e1,e2) => criterio(e1,e2)).head)
+    var mejorEstado = cabezaONada(equipo)(estadosOrdenadosDeEquipo(equipo, criterio))
     
     misiones.find(_.serRealizadaPor(Resultado(equipo)) == mejorEstado)
   }
+
+  private def estadosOrdenadosDeEquipo(equipo: Equipo, criterio: Criterio) = {
+    misiones.map(_.serRealizadaPor(Resultado(equipo))).filter(_.isSuccess).map(_.get).sortWith((e1,e2) => criterio(e1,e2))
+  }
   
+  private def cabezaONada(equipo: Equipo)(lista: List[Equipo]) = Resultado(lista.headOption.fold(equipo)(eq => eq))
 }
 
 object CriteriosDeMision{

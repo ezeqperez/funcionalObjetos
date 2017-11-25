@@ -8,7 +8,7 @@ import junit.framework.AssertionFailedError
 
 class TestMision {
   
-  val misionVacia = new Mision()
+
   
   
   

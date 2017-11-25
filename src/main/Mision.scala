@@ -1,8 +1,8 @@
 package main
 
-case class Mision(tareas: List[Tarea] = List()) {
+abstract case class Mision(tareas: List[Tarea] = List()) {
 
-  def recompensa: (Equipo => Equipo) = null
+  val recompensa: Equipo => Equipo
   
   def serRealizadaPor(equipo: Resultado) = {
     queHagaLasTareasUn(equipo).map(recompensa)
@@ -18,9 +18,13 @@ case class Mision(tareas: List[Tarea] = List()) {
 }
 
 object pegarleAlColo extends Mision(List(pelearContraMonstruo)) {
-  def recompensa(equipo: Equipo) = equipo.cobrarOro(10)
+  val recompensa = (equipo: Equipo) => equipo.cobrarOro(10)
 }
 
 object robarCosas extends Mision(List(new robarTalisman(talismanDedicacion))) {
-  def recompensa(equipo: Equipo) = equipo.cobrarOro(1000)
+  val recompensa = (equipo: Equipo) => equipo.cobrarOro(1000)
+}
+
+object abrirPuerta extends Mision(List(forzarPuerta)) {
+  val recompensa = (equipo: Equipo) => equipo.cobrarOro(1000)
 }
