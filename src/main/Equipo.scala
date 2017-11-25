@@ -10,7 +10,7 @@ case class Equipo(nombre: String = "", val integrantes: List[Heroe] = List(), po
     if (aNadieLeSirve(item))
       this.copy(pozo = pozo + item.precio)
     else
-      mejorHeroeSegun(diferenciaConMainStatDe(item)).equipar(item)
+      reemplazarMiembro(mejorHeroeSegun(diferenciaConMainStatDe(item)), mejorHeroeSegun(diferenciaConMainStatDe(item)).equipar(item)) 
   }
 
   def obtenerMiembro(nuevo: Heroe) = {
