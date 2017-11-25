@@ -6,7 +6,6 @@ object Inventario {
   
   def apply (items: List[Item] = List(), heroe: Heroe = new Heroe) : Inventario = {
     val inv = new Inventario(items,heroe)
-    val listaVacia: List[Item] = List()
     
     items.filter(_.puedeEquiparseEn(heroe)).foldLeft(inv)((s,item) => s.agregarItem(item))
   }
